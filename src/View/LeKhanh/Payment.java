@@ -10,6 +10,7 @@ import java.sql.*;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 import Models.*;
+import javax.swing.JFrame;
 
 /**
  *
@@ -81,6 +82,8 @@ public class Payment extends javax.swing.JFrame {
         tien5.setText(normalize(tien5.getText()));
         tien6.setText(normalize(tien6.getText()));
         tongthanhtien.setText(normalize(tongthanhtien.getText()));
+        
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

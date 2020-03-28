@@ -8,6 +8,8 @@ package Controller;
 import java.util.ArrayList;
 import Models.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author kl
@@ -19,7 +21,39 @@ public class CustomerDAOImpl  implements DAO{
     }
     @Override
     public ArrayList<Customer> getAll() {
-        return null;
+        ArrayList<Customer> rs = new ArrayList<>();
+        try {
+            
+            String sql = "SELECT * FROM customer";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rss = ps.executeQuery();
+            while(rss.next())
+            {
+                Customer cus = new Customer();
+                
+                int personId = rss.getInt("PersonId");
+                String joindate = rss.getString("Joindate");
+                int paymentid = rss.getInt("PaymentId");
+                
+                cus.setJoindate(joindate);
+                cus.setPersonId(personId);
+                cus.setPaymentId(paymentid);
+                
+                Person p = null;
+                PersonDAOImpl piml = new PersonDAOImpl(connection);
+                p = piml.searchByID(personId);
+                
+                cus.setPerson(p);
+                
+                RegistDAOImpl rgiml = new RegistDAOImpl(connection);
+                cus.setRegistArrayList(rgiml.getRegistByPersonId(personId));
+                
+                rs.add(cus);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
     }
 
     @Override

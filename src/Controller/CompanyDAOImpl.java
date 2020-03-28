@@ -8,6 +8,8 @@ package Controller;
 import java.util.ArrayList;
 import Models.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author kl
@@ -39,7 +41,35 @@ public class CompanyDAOImpl implements DAO{
 
     @Override
     public Company searchByID(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Company rs = new Company();
+        try {
+            
+            String sql = "SELECT * FROM company WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rss = ps.executeQuery();
+            if(rss.next())
+            {
+
+                int idt = rss.getInt("Id");
+                int addressid = rss.getInt("AddressId");
+                String name = rss.getString("Name");
+                int phone = rss.getInt("phone");
+                
+                AddressDAOImpl adiml = new AddressDAOImpl(connection);
+                Address add = adiml.getAddress(addressid);
+                
+                rs.setId(id);
+                rs.setAddressId(add);
+                rs.setName(name);
+                rs.setPhone(phone);
+                
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CompanyDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
     }
     
 }

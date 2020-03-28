@@ -8,6 +8,8 @@ package Controller;
 import java.util.ArrayList;
 import Models.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author kl
@@ -19,7 +21,9 @@ public class MeasureDAOImpl  implements DAO{
     }
     @Override
     public ArrayList<Mesure> getAll() {
-        return null;
+        ArrayList<Mesure> rs = new ArrayList<>();
+        
+        return rs;
     }
 
     @Override

@@ -10,6 +10,7 @@ import Controller.*;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import Models.*;
+import javax.swing.JFrame;
 
 /**
  *
@@ -26,6 +27,7 @@ public class Registed extends javax.swing.JFrame {
         initComponents();
         tm = (DefaultTableModel)jTable1.getModel();
         fillTable();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

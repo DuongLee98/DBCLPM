@@ -10,6 +10,7 @@ import Controller.*;
 import java.util.ArrayList;
 import Models.*;
 import java.sql.Connection;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,6 +26,7 @@ public class Update extends javax.swing.JFrame {
         initComponents();
         
         dtm = (DefaultTableModel) tblResult.getModel();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

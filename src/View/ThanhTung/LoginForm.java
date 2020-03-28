@@ -9,6 +9,7 @@ import Database.ConnectToDB;
 import Controller.*;
 import javax.swing.JFrame;
 import Models.Account;
+import View.LeDuong.HomePage;
 
 /**
  *
@@ -107,8 +108,11 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         if(checkLogin()){
-            Registed registed = new Registed();
-            registed.setVisible(true);
+            HomePage hp = new HomePage();
+            hp.setVisible(true);
+            this.setVisible(false);
+//            Registed registed = new Registed();
+//            registed.setVisible(true);
         }else{
             System.out.println("Login fail");
         };

@@ -8,6 +8,8 @@ package Controller;
 import java.util.ArrayList;
 import Models.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author kl
@@ -102,5 +104,33 @@ public class RegistDAOImpl implements DAO{
         
         int idCustomer = c.getPerson().getId();
         return idCustomer;
+    }
+    
+    public ArrayList<Regist> getRegistByPersonId(int personId)
+    {
+        ArrayList<Regist> rs = new ArrayList<>();
+        try {
+            
+            String sql = "SELECT * FROM regist WHERE CustomerPersonId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, personId);
+            ResultSet rss = ps.executeQuery();
+            while(rss.next())
+            {
+                Regist rg = new Regist();
+                int id = rss.getInt("Id");
+                int mesureId = rss.getInt("MesureId");
+                String time = rss.getString("Time");
+                int cpi = rss.getInt("CustomerPersonId");
+                
+                rg.setId(id);
+                rg.setTime(time);
+                
+                rs.add(rg);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
     }
 }
