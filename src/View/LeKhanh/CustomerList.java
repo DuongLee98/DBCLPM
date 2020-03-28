@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author kl
+ * @author LeKhanh
  */
 public class CustomerList extends javax.swing.JFrame implements Runnable{
 

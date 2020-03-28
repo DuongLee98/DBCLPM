@@ -13,7 +13,7 @@ import Models.*;
 
 /**
  *
- * @author kl
+ * @author LeKhanh
  */
 public class Payment extends javax.swing.JFrame {
 
