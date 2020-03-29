@@ -34,7 +34,7 @@ public class Calculate extends javax.swing.JFrame {
         initData();
         setupViewDropDown();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        System.out.println("new code");
+        System.out.println("DuongLê new code");
     }
     
     public void initData()
