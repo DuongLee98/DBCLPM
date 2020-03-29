@@ -833,7 +833,7 @@ public class Payment extends javax.swing.JFrame {
                 res += r + " ";
 
             }
-            res += "trieu ";
+            res += "triệu ";
 
             if (s[1].length() == 1) {
                 s[1] = "00" + s[1];
