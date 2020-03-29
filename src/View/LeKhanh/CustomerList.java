@@ -36,6 +36,7 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
     Connection con;
     String searchText;
     public CustomerList(Connection con) {
+        System.out.println("Le Khanh new code");
         initComponents();
         this.con = con;
         arrObj = new ArrayList<>();
