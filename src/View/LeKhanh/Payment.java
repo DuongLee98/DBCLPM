@@ -162,38 +162,38 @@ public class Payment extends javax.swing.JFrame {
 
         jLabel1.setText("Tên KH:");
 
-        jname.setText("jLabel2");
+        jname.setText("Lê Duy Hưng Khánh");
 
         jLabel3.setText("Mã công tơ:");
 
-        jmeasid.setText("jLabel4");
+        jmeasid.setText("2");
 
         jLabel5.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
         jLabel5.setText("HÓA ĐƠN TIỀN ĐIỆN");
 
         jLabel6.setText("Mã hóa đơn");
 
-        jBillId.setText("jLabel7");
+        jBillId.setText("10");
 
         jLabel8.setText("Địa chỉ:");
 
-        jadd.setText("jLabel9");
+        jadd.setText("số 10 trần phú, hà đông");
 
         jLabel10.setText("SDT:");
 
-        jphone.setText("jLabel11");
+        jphone.setText("123456789");
 
         jLabel2.setText("Sử dụng từ:");
 
-        jLabel4.setText("jLabel4");
+        jLabel4.setText("12-09-2019");
 
         jLabel7.setText("đến:");
 
-        jLabel9.setText("jLabel9");
+        jLabel9.setText("12-10-2019");
 
         jLabel11.setText("Mã KH:");
 
-        jcusid.setText("jLabel12");
+        jcusid.setText("2");
 
         jLabel15.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         jLabel15.setText("Chỉ số mới");
@@ -339,7 +339,7 @@ public class Payment extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jname))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +348,8 @@ public class Payment extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jphone)
-                                    .addComponent(jadd))))
+                                    .addComponent(jadd)
+                                    .addComponent(jcusid))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -363,8 +364,6 @@ public class Payment extends javax.swing.JFrame {
                         .addGap(76, 76, 76))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel11)
-                        .addGap(18, 18, 18)
-                        .addComponent(jcusid)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -639,7 +638,7 @@ public class Payment extends javax.swing.JFrame {
         boolean isGreater = true;
         for (int i = 0; i < 6; i++) {
             if (isGreater) {
-                System.out.println(dn);
+                
                 if (dn - res[i] > 0) {
                     dn = dn - res[i];
                 } else {
@@ -663,10 +662,9 @@ public class Payment extends javax.swing.JFrame {
     String normalize(String s) {
         String ret = "";
         String[] so = s.split("\\.");
-        //System.out.println(so[0]);
+        
         int n = so[0].length() % 3 + 1;
-        //System.out.println(n);
-        //String[]res = new String[n+1];
+        
         ret += so[1];
 
         int index = so[0].length() - 1;
@@ -680,7 +678,7 @@ public class Payment extends javax.swing.JFrame {
                 }
             }
             ret = tmp + "." + ret;
-            //System.out.println(tmp);
+            
             index -= 3;
         }
         return ret;
@@ -785,11 +783,11 @@ public class Payment extends javax.swing.JFrame {
                 s[0] = "0" + s[0];
 
             }
-            System.out.println(s[0].length());
+            
             for (int i = 0; i < 3; i++) {
 
                 String r = numToWord(s[0].charAt(i), i);
-                System.out.println(r);
+                
 
                 res += r + " ";
 
@@ -820,11 +818,11 @@ public class Payment extends javax.swing.JFrame {
                 s[0] = "0" + s[0];
 
             }
-            System.out.println(s[0].length());
+            
             for (int i = 0; i < 3; i++) {
 
                 String r = numToWord(s[0].charAt(i), i);
-                System.out.println(r);
+                
 
                 res += r + " ";
 
