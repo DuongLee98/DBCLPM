@@ -52,7 +52,7 @@ public class JoinDAOImpl implements DAO{
                             + "FROM regist, person , fullname, address, customer, "
                             + "bill, mesure "
                             + "WHERE person.id = customer.personid "
-                            + "and bill.id = mesure.id "
+                            + "and bill.mesureid = mesure.id "
                             + "and mesure.id = regist.mesureid "
                             + "and person.fullnameid = fullname.id "
                             + "and person.addressid = address.id "
@@ -60,8 +60,8 @@ public class JoinDAOImpl implements DAO{
                             + "and regist.customerpersonid = customer.personid "
                             + "and (person.phone like ? "
                             + "or fullname.firstname like ? "
-                            + "or regist.mesureid = ?) "
-                            + "and NOT (bill.paymentstatus = 0)");
+                            + "or bill.mesureid = ?) "
+                            + "and (bill.paymentstatus = 0)");
             prstm.setString(1, search);
             prstm.setString(2, search);
             prstm.setString(3, search);

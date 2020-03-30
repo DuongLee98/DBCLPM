@@ -7,6 +7,7 @@ package View.LeKhanh;
 
 import Controller.JoinDAOImpl;
 import Controller.MeasureDAOImpl;
+import Database.ConnectToDB;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -43,6 +44,10 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
         tb1 = (DefaultTableModel) jTable1.getModel();
         mdi = new MeasureDAOImpl(con);
         jdi = new JoinDAOImpl(con);
+//        tb1.addRow(new Object[]{
+//            2, "Lê Duy Hưng Khánh", "số 10 trần phú, hà đông", 2, 123456789,
+//            "12-10-2019", "chưa thanh toán"
+//        });
         Thread t = new Thread(this);
         t.start();
         jTextField1.addKeyListener(new KeyAdapter()
@@ -87,6 +92,11 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
                 jTextField1InputMethodTextChanged(evt);
+            }
+        });
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
             }
         });
 
@@ -147,11 +157,11 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(39, 39, 39))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,6 +221,10 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
             Logger.getLogger(CustomerList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -242,7 +256,8 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
 //        /* Create and display the form */
 //        java.awt.EventQueue.invokeLater(new Runnable() {
 //            public void run() {
-//                new Payment().setVisible(true);
+//                ConnectToDB con = new ConnectToDB();
+//                new CustomerList(con.getCon()).setVisible(true);
 //            }
 //        });
 //    }
