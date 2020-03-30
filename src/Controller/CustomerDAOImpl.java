@@ -114,7 +114,7 @@ public class CustomerDAOImpl  implements DAO{
     
     public Customer getByPersonId(int id) {
         Customer customer = null;
-        String sql="SELECT Joindate, PaymentId, PersonId FROM person WHERE PersonId = ?";
+        String sql="SELECT Joindate, PaymentId, PersonId FROM customer WHERE PersonId = ?";
         try{
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
