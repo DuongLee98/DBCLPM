@@ -91,6 +91,7 @@ public class MeasureDAOImpl  implements DAO{
     
     public ArrayList<Mesure> getListMesure(int id) {
         ArrayList<Mesure> listMesure = new ArrayList<Mesure>();
+
         String sql = "SELECT Id, Date, PreIndex, CurrentIndex FROM mesure WHERE StationId = ?";
         
         try {
@@ -105,7 +106,12 @@ public class MeasureDAOImpl  implements DAO{
                 m.setPreIndex(rs.getInt("PreIndex"));
                 m.setCurrentIndex(rs.getInt("CurrentIndex"));
                 
+                RegistDAOImpl rdao = new RegistDAOImpl(connection);
+                m.setRegistId(rdao.getRegistByMesureId(id));
+                
                 listMesure.add(m);
+                
+                
             }
         } catch (Exception e) {
             e.printStackTrace();

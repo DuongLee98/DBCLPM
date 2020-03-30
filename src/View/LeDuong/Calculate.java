@@ -7,6 +7,7 @@ package View.LeDuong;
 
 import Controller.StationDAOImpl;
 import Database.ConnectToDB;
+import Models.Bill;
 import Models.Mesure;
 import Models.Station;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class Calculate extends javax.swing.JFrame {
     private ArrayList<Station> data;
     private ConnectToDB connect;
     private StationDAOImpl sdao;
+    private int clicked;
+    
     public Calculate() {
         initComponents();
         data = new ArrayList<>();
@@ -66,7 +69,7 @@ public class Calculate extends javax.swing.JFrame {
         for (int i=0; i<listMesure.size(); i++)
         {
             Mesure tm = listMesure.get(i);
-            Object [] dt = {tm.getId(), tm.getDate(), tm.getPreIndex(), tm.getCurrentIndex(), tm.getCurrentIndex()-tm.getPreIndex(), caculate(tm.getCurrentIndex()-tm.getPreIndex())};
+            Object [] dt = {tm.getId(), tm.getDate(), tm.getPreIndex(), tm.getCurrentIndex(), tm.getCurrentIndex()-tm.getPreIndex(), caculate(tm.getCurrentIndex()-tm.getPreIndex()), true};
             dtm.addRow(dt);
         }
     }
@@ -114,7 +117,7 @@ public class Calculate extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox<String>();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -123,6 +126,7 @@ public class Calculate extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -131,14 +135,14 @@ public class Calculate extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id", "Date", "PreIndex", "CurrentIndex", "Total", "Calculate"
+                "Id", "Date", "PreIndex", "CurrentIndex", "Total", "Calculate", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -206,6 +210,13 @@ public class Calculate extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel7.setText("Tính tiền điện");
 
+        jButton1.setText("In Hóa Đơn");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -224,7 +235,10 @@ public class Calculate extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addGap(63, 63, 63)))
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -244,7 +258,9 @@ public class Calculate extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -253,9 +269,27 @@ public class Calculate extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         int click = jComboBox1.getSelectedIndex();
+        this.clicked = click;
         setupViewTable(click);
         setupInfo(click);
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        ArrayList<Mesure> arrMs = data.get(this.clicked).getMesureArrayList();
+        
+        for (int i=0; i<arrMs.size(); i++)
+        {
+            Mesure tmp = arrMs.get(i);
+            Bill b = new Bill();
+            b.setMesureId(tmp);
+            b.setDate(tmp.getDate());
+            b.setTax(10);
+            b.setCustomerId(tmp.getRegistId().getCustomerPersonId().getPersonId());
+            //b.setCustomerPhone();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -293,6 +327,7 @@ public class Calculate extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
