@@ -59,7 +59,7 @@ public class PersonDAOImpl implements DAO{
     @Override
     public Person searchByID(int id) {
         Person person = null;
-        String sql="SELECT Id, FullnameId, AddressId, Phone, Dob FROM Person WHERE id = ?";
+        String sql="SELECT Id, FullnameId, AddressId, Phone, Dob FROM person WHERE id = ?";
         try{
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, id);
