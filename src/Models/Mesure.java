@@ -31,6 +31,8 @@ public class Mesure implements Serializable {
     private ArrayList<Bill> billArrayList;
    
     private ArrayList<Regist> registArrayList;
+    
+    private Regist registId;
 
     public Mesure() {
     }
@@ -101,5 +103,13 @@ public class Mesure implements Serializable {
         this.registArrayList = registArrayList;
     }
 
-   
+    public Regist getRegistId() {
+        return registId;
+    }
+
+    public void setRegistId(Regist registId) {
+        this.registId = registId;
+    }
+
+    
 }

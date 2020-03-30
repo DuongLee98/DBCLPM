@@ -133,4 +133,35 @@ public class RegistDAOImpl implements DAO{
         }
         return rs;
     }
+    
+    public Regist getRegistByMesureId(int mesureId)
+    {
+        Regist rs = new Regist();
+        try {
+            
+            String sql = "SELECT * FROM regist WHERE MesureId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, mesureId);
+            ResultSet rss = ps.executeQuery();
+            if(rss.next())
+            {
+                
+                int id = rss.getInt("Id");
+                int mesure = rss.getInt("MesureId");
+                String time = rss.getString("Time");
+                int cpi = rss.getInt("CustomerPersonId");
+                
+                rs.setId(id);
+                rs.setTime(time);
+                
+                CustomerDAOImpl cdao = new CustomerDAOImpl(connection);
+                
+                rs.setCustomerPersonId(cdao.getByPersonId(cpi));
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
+    }
 }

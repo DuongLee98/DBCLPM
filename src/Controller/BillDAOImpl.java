@@ -88,5 +88,25 @@ public class BillDAOImpl implements DAO {
             Logger.getLogger(BillDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    public boolean addBill(Bill b)
+    {
+        try {
+            String qery = "INSERT INTO bill (MesureId, Date, Tax, CustomerId, CustomerName, CustomerPhone, PreIndex, CurrentIndex, Paymentstatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = this.connection.prepareCall(qery);
+            ps.setInt(1, b.getMesureId().getId());
+            ps.setString(2, b.getDate());
+            ps.setInt(3, b.getTax());
+            ps.setInt(4, b.getCustomerId());
+            ps.setInt(5, b.getCustomerName());
+            ps.setInt(6, b.getCustomerPhone());
+            ps.setInt(7, b.getPreIndex());
+            ps.setInt(8, b.getCurrentIndex());
+            ps.setInt(9, 0);
+            return ps.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(BillDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }
