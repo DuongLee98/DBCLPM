@@ -27,6 +27,8 @@ public class Update extends javax.swing.JFrame {
         
         dtm = (DefaultTableModel) tblResult.getModel();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        System.out.println("Vua sua may xong test 1 chut");
     }
 
     /**
