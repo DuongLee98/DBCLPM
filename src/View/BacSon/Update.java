@@ -27,8 +27,6 @@ public class Update extends javax.swing.JFrame {
         
         dtm = (DefaultTableModel) tblResult.getModel();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
-        System.out.println("Vua sua may xong test 1 chut");
     }
 
     /**
@@ -63,6 +61,8 @@ public class Update extends javax.swing.JFrame {
         txtPreInd = new javax.swing.JTextField();
         txtCurInd = new javax.swing.JTextField();
         btnCapNhat = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        txtThoiGian = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,9 +71,17 @@ public class Update extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mã KH", "Tên KH", "Số ĐT", "Ngày sinh", "Địa chỉ", "Mã công tơ", "Số điện hiện tại", "Số điện trước"
+                "Mã KH", "Tên KH", "Số ĐT", "Ngày sinh", "Địa chỉ", "Mã công tơ", "Số điện hiện tại", "Số điện trước", "Thời gian"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblResult.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblResultMouseClicked(evt);
@@ -139,6 +147,8 @@ public class Update extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setText("Thời gian");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -168,16 +178,17 @@ public class Update extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(96, 96, 96)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(btnCapNhat)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(txtMaCongTo)
-                                                .addComponent(txtPreInd)
-                                                .addComponent(txtCurInd, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)))))))
+                                            .addComponent(txtMaCongTo)
+                                            .addComponent(txtPreInd)
+                                            .addComponent(txtCurInd, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                            .addComponent(txtThoiGian))))))
                         .addGap(0, 188, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -230,11 +241,13 @@ public class Update extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(txtDob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCapNhat))
+                    .addComponent(jLabel11)
+                    .addComponent(txtThoiGian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCapNhat))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
                 .addContainerGap())
@@ -255,7 +268,7 @@ public class Update extends javax.swing.JFrame {
         int id = Integer.parseInt(txtKhuVuc.getText());
         
         MeasureDAOImpl md = new MeasureDAOImpl(connectToDB.getCon());
-        ArrayList<Mesure> listMesure = md.getListMesure(id);
+        ArrayList<Mesure> listMesure = md.getListUsedMeasure(id);
         
         dtm.setRowCount(0);
         for(Mesure m : listMesure) {
@@ -269,7 +282,7 @@ public class Update extends javax.swing.JFrame {
             String address = p.getAddressId().getNumber() + " " + p.getAddressId().getStreet();
             
             dtm.addRow(new Object[] {
-                p.getId(), fullName, p.getPhone(), p.getDob(), address, m.getId(), m.getPreIndex(), m.getCurrentIndex()
+                p.getId(), fullName, p.getPhone(), p.getDob(), address, m.getId(), m.getPreIndex(), m.getCurrentIndex(), m.getDate()
             });
         }
     }//GEN-LAST:event_btnKhuVucMouseClicked
@@ -289,16 +302,18 @@ public class Update extends javax.swing.JFrame {
         txtDiaChi.setText(dtm.getValueAt(selectedRow, 4).toString());
         txtMaCongTo.setText(dtm.getValueAt(selectedRow, 5).toString());
         txtPreInd.setText(dtm.getValueAt(selectedRow, 6).toString());
-        txtCurInd.setText(dtm.getValueAt(selectedRow, 7).toString());   
+        txtCurInd.setText(dtm.getValueAt(selectedRow, 7).toString());
+        txtThoiGian.setText(dtm.getValueAt(selectedRow, 8).toString());
     }//GEN-LAST:event_tblResultMouseClicked
 
     private void btnCapNhatMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCapNhatMouseClicked
         int preInd = Integer.parseInt(txtPreInd.getText());
         int curInd = Integer.parseInt(txtCurInd.getText());
         int idMesure = Integer.parseInt(txtMaCongTo.getText());
+        String time = txtThoiGian.getText();
         
         MeasureDAOImpl md = new MeasureDAOImpl(connectToDB.getCon());
-        md.updateMesureIndex(idMesure, preInd, curInd);
+        md.updateMesureIndex(idMesure, time, preInd, curInd);
     }//GEN-LAST:event_btnCapNhatMouseClicked
 
     /**
@@ -342,6 +357,7 @@ public class Update extends javax.swing.JFrame {
     private javax.swing.JButton btnKhuVuc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -361,5 +377,6 @@ public class Update extends javax.swing.JFrame {
     private javax.swing.JTextField txtPreInd;
     private javax.swing.JTextField txtSDT;
     private javax.swing.JTextField txtTenKH;
+    private javax.swing.JTextField txtThoiGian;
     // End of variables declaration//GEN-END:variables
 }

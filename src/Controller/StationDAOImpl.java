@@ -40,7 +40,7 @@ public class StationDAOImpl  implements DAO{
                 Company cp = cdiml.searchByID(companyId);
                 
                 MeasureDAOImpl miml = new MeasureDAOImpl(connection);
-                ArrayList<Mesure> arrmeasure = miml.getListMesure(id);
+                ArrayList<Mesure> arrmeasure = miml.getListUsedMeasure(id);
                 
                 Station st = new Station();
                 st.setAddressId(add);

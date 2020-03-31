@@ -89,10 +89,11 @@ public class MeasureDAOImpl  implements DAO{
         return listMesure;
     }
     
-    public ArrayList<Mesure> getListMesure(int id) {
+    public ArrayList<Mesure> getListUsedMeasure(int id) {
         ArrayList<Mesure> listMesure = new ArrayList<Mesure>();
 
-        String sql = "SELECT Id, Date, PreIndex, CurrentIndex FROM mesure WHERE StationId = ?";
+        String sql = "SELECT m1.Id, m1.StationId, m1.Date, m1.PreIndex, m1.CurrentIndex FROM mesure m1 "
+                + "WHERE StationId = ? AND m1.Id IN (SELECT m.Id FROM regist r, mesure m WHERE m.Id = r.MesureId);";
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -109,9 +110,7 @@ public class MeasureDAOImpl  implements DAO{
                 RegistDAOImpl rdao = new RegistDAOImpl(connection);
                 m.setRegistId(rdao.getRegistByMesureId(id));
                 
-                listMesure.add(m);
-                
-                
+                listMesure.add(m); 
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,16 +119,17 @@ public class MeasureDAOImpl  implements DAO{
         return listMesure;
     }
     
-    public int updateMesureIndex(int id, int preI, int curI) {
-        String sql = "UPDATE mesure SET PreIndex = ?, CurrentIndex = ? WHERE id = ?";
+    public int updateMesureIndex(int id, String date, int preI, int curI) {
+        String sql = "UPDATE mesure SET Date = ?, PreIndex = ?, CurrentIndex = ? WHERE id = ?";
         int returnValue = 0;
         
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             
-            ps.setInt(1, preI);
-            ps.setInt(2, curI);
-            ps.setInt(3, id);
+            ps.setString(1, date);
+            ps.setInt(2, preI);
+            ps.setInt(3, curI);
+            ps.setInt(4, id);
             
             int rs = ps.executeUpdate();
             returnValue = rs;
