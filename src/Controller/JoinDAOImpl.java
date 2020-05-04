@@ -59,7 +59,8 @@ public class JoinDAOImpl implements DAO{
                             + "and address.id = person.addressid "
                             + "and regist.customerpersonid = customer.personid "
                             + "and (person.phone like ? "
-                            + "or fullname.firstname like ? "
+                            + "or concat(fullname.lastname,\" \", fullname.middlename ,\" \", "
+                            + "fullname.firstname) like ? "
                             + "or bill.mesureid = ?) "
                             + "and (bill.paymentstatus = 0)");
             prstm.setString(1, search);
