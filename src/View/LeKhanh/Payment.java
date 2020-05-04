@@ -22,14 +22,14 @@ public class Payment extends javax.swing.JFrame {
      * Creates new form Payment
      */
     int[] listUnit = new int[6];
-    DecimalFormat formatter = new DecimalFormat("#.###");
+    
     Connection con;
     int billId;
 
     public Payment(Object[] o, Connection con) {
         initComponents();
         this.con = con;
-        jname.setText(o[3].toString() + " " + o[2].toString() + " " + o[1].toString());
+        jname.setText(o[1].toString() + " " + o[2].toString() + " " + o[3].toString());
         jadd.setText(o[4].toString() + ", " + o[5].toString());
         jcusid.setText(o[0].toString());
         jmeasid.setText(o[6].toString());
@@ -38,42 +38,43 @@ public class Payment extends javax.swing.JFrame {
         jBillId.setText(billId + "");
         int csc1 = (int) o[10];
         int csm = (int) o[11];
-        this.csc1.setText(csc1 + "");
-        this.csm.setText(csm + "");
+        this.csc1.setText(normalizeInt(csc1));
+        this.csm.setText(normalizeInt(csm));
         int tongDN = csm - csc1;
-        this.tong.setText(tongDN + "");
+        this.tong.setText(normalizeInt(tongDN));
         int[] dntt = new int[6];
         dntt = tinhDN(tongDN);
-        tt1.setText(dntt[0] + "");
-        tt2.setText(dntt[1] + "");
-        tt3.setText(dntt[2] + "");
-        tt4.setText(dntt[3] + "");
-        tt5.setText(dntt[4] + "");
-        tt6.setText(dntt[5] + "");
-        double thanhtien1 = Double.parseDouble(formatter.format(dntt[0] * Double.parseDouble(dg1.getText())));
-        double thanhtien2 = Double.parseDouble(formatter.format(dntt[1] * Double.parseDouble(dg2.getText())));
-        double thanhtien3 = Double.parseDouble(formatter.format(dntt[2] * Double.parseDouble(dg3.getText())));
-        double thanhtien4 = Double.parseDouble(formatter.format(dntt[3] * Double.parseDouble(dg4.getText())));
-        double thanhtien5 = Double.parseDouble(formatter.format(dntt[4] * Double.parseDouble(dg5.getText())));
-        double thanhtien6 = Double.parseDouble(formatter.format(dntt[5] * Double.parseDouble(dg6.getText())));
-        tien1.setText(thanhtien1 + "");
-        tien2.setText(thanhtien2 + "");
-        tien3.setText(thanhtien3 + "");
-        tien4.setText(thanhtien4 + "");
-        tien5.setText(thanhtien5 + "");
-        tien6.setText(thanhtien6 + "");
-        tongtt.setText(tongDN + "");
+        tt1.setText(normalizeInt(dntt[0]));
+        tt2.setText(normalizeInt(dntt[1]));
+        tt3.setText(normalizeInt(dntt[2]));
+        tt4.setText(normalizeInt(dntt[3]));
+        tt5.setText(normalizeInt(dntt[4]));
+        tt6.setText(normalizeInt(dntt[5]));
+        double thanhtien1 = Double.parseDouble(dntt[0] * Double.parseDouble(dg1.getText())+"");
+        double thanhtien2 = Double.parseDouble(dntt[1] * Double.parseDouble(dg2.getText())+"");
+        double thanhtien3 = Double.parseDouble(dntt[2] * Double.parseDouble(dg3.getText())+"");
+        double thanhtien4 = Double.parseDouble(dntt[3] * Double.parseDouble(dg4.getText())+"");
+        double thanhtien5 = Double.parseDouble(dntt[4] * Double.parseDouble(dg5.getText())+"");
+        double thanhtien6 = Double.parseDouble(dntt[5] * Double.parseDouble(dg6.getText())+"");
+        
+        tien1.setText(String.format("%.03f", thanhtien1));
+        tien2.setText(String.format("%.03f", thanhtien2));
+        tien3.setText(String.format("%.03f", thanhtien3));
+        tien4.setText(String.format("%.03f", thanhtien4));
+        tien5.setText(String.format("%.03f", thanhtien5));
+        tien6.setText(String.format("%.03f", thanhtien6));
+        tongtt.setText(normalizeInt(tongDN ));
 
-        double tongThanhTien = Double.parseDouble(formatter.format(thanhtien1
+        double tongThanhTien = thanhtien1
                 + thanhtien2
                 + thanhtien3
                 + thanhtien4
                 + thanhtien5
-                + thanhtien6));
+                + thanhtien6;
         
-        tongthanhtien.setText(tongThanhTien + "");
-        thue1.setText(formatter.format(tongThanhTien * 0.1));
-        tongcong.setText(normalize(formatter.format(tongThanhTien + tongThanhTien * 0.1)));
+        tongthanhtien.setText(String.format("%.03f", tongThanhTien ));
+        thue1.setText(String.format("%.03f", tongThanhTien*0.1));
+        tongcong.setText(normalize(String.format("%.03f",(tongThanhTien + tongThanhTien * 0.1))));
         bangchu.setText(toWord(tongcong.getText().split("\\.")));
         tien1.setText(normalize(tien1.getText()));
         tien2.setText(normalize(tien2.getText()));
@@ -82,7 +83,11 @@ public class Payment extends javax.swing.JFrame {
         tien5.setText(normalize(tien5.getText()));
         tien6.setText(normalize(tien6.getText()));
         tongthanhtien.setText(normalize(tongthanhtien.getText()));
-        
+        String x = thue1.getText();
+        System.out.println(x);
+        if(x.contains(".") && x.length() == 5){
+            thue1.setText(x.substring(2));
+        }
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
@@ -153,12 +158,14 @@ public class Payment extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
 
         jLabel20.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel20.setText("Chi so cu");
         jLabel20.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(java.awt.Color.white);
 
         jLabel1.setText("Tên KH:");
 
@@ -196,73 +203,91 @@ public class Payment extends javax.swing.JFrame {
         jcusid.setText("2");
 
         jLabel15.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel15.setText("Chỉ số mới");
         jLabel15.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel16.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("ĐN tiêu thụ");
         jLabel16.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        dg1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dg1.setText("1.678");
         dg1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien4.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tien4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         csm.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        csm.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         csm.setText("Chi so moi");
         csm.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tt1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tt1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tt1.setText("DN tieu thu1");
         tt1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel23.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel23.setText("Đơn giá");
         jLabel23.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel24.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel24.setText("Thành tiền");
         jLabel24.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tong.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tong.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tong.setText("DN tieu thu");
         tong.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tt3.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tt3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tt3.setText("DN tieu thu 3");
         tt3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tt2.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tt2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tt2.setText("DN tieu thu2");
         tt2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tt5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tt5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tt5.setText("DN tieu thu5");
         tt5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tongtt.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tongtt.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tongtt.setText("DN tieu thu6");
         tongtt.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tt4.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tt4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tt4.setText("DN tieu thu4");
         tt4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg2.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        dg2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dg2.setText("1.734");
         dg2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg3.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        dg3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dg3.setText("2.014");
         dg3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg4.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        dg4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dg4.setText("2.536");
         dg4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        dg5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dg5.setText("2.834");
         dg5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
@@ -270,45 +295,57 @@ public class Payment extends javax.swing.JFrame {
         lb.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien2.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tien2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien3.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tien3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tien5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tongthanhtien.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tongthanhtien.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tongthanhtien.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tien1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         csc1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        csc1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         csc1.setText("Chi so cu");
         csc1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
+        csc1.setOpaque(true);
 
         jLabel12.setText("Tổng");
 
         tt6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tt6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tt6.setText("DN tieu thu6");
         tt6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        dg6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         dg6.setText("2.927");
         dg6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tien6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel13.setText("+Thuế: 10%");
 
         tongcong.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        tongcong.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tongcong.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel17.setText("Tổng số tiền phải thanh toán");
 
         thue1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        thue1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         thue1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel18.setText("Bằng chữ:");
@@ -323,8 +360,11 @@ public class Payment extends javax.swing.JFrame {
         });
 
         jLabel19.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("Chỉ số cũ");
         jLabel19.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
+
+        jLabel14.setText("* Đơn vị: VNĐ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -332,6 +372,7 @@ public class Payment extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
             .addComponent(jSeparator2)
+            .addComponent(jSeparator3)
             .addGroup(layout.createSequentialGroup()
                 .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -366,102 +407,95 @@ public class Payment extends javax.swing.JFrame {
                         .addComponent(jLabel11)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jBillId)
-                .addGap(29, 29, 29))
-            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel13)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel17))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(csc1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(csm, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(thue1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tongtt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lb, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tongthanhtien, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel24))
-                        .addComponent(tong, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tt1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dg1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tien1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tt3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dg3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tien3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tt2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dg2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tien2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tt5, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dg5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tien5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tt6, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dg6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tien6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(tt4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dg4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tien4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(tongcong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 9, Short.MAX_VALUE))
-            .addComponent(jSeparator3)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(jLabel5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel18)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(bangchu))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(186, 186, 186)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jBillId))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(csc1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(csm, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jLabel12)
+                                        .addComponent(jLabel13)
+                                        .addComponent(jLabel17)
+                                        .addComponent(jLabel14))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(tongtt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(lb, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tongthanhtien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(tong, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tongcong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(tt3, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(dg3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tien3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(tt2, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(dg2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tien2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(tt1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(dg1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tien1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(tt4, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(dg4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tien4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(tt5, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(dg5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tien5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(tt6, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(dg6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(tien6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(thue1, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel18)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(bangchu)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(164, 164, 164)
+                                .addComponent(jLabel5)))
+                        .addGap(29, 29, 29))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(226, 226, 226))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -470,9 +504,9 @@ public class Payment extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jBillId))
-                .addGap(8, 8, 8)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -498,46 +532,51 @@ public class Payment extends javax.swing.JFrame {
                     .addComponent(jcusid))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel14)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel23)
+                    .addComponent(jLabel24)
+                    .addComponent(jLabel19))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(csm)
+                        .addComponent(csc1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tt1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dg1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tien1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tien2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tt2)
+                        .addComponent(dg2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tien3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tt3)
+                        .addComponent(dg3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tt4)
+                            .addComponent(dg4))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(thue1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tongcong, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel23)
-                                    .addComponent(jLabel24)
-                                    .addComponent(jLabel19))
-                                .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tong, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(csm)
-                                        .addComponent(csc1)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tt1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(dg1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tien1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tien2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tt2)
-                                        .addComponent(dg2)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tien3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tt3)
-                                        .addComponent(dg3)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tien4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tt4)
-                                        .addComponent(dg4)))
                                 .addGap(8, 8, 8)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tien5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -561,20 +600,17 @@ public class Payment extends javax.swing.JFrame {
                                         .addGap(12, 12, 12)
                                         .addComponent(tongthanhtien, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(17, 17, 17)
-                                .addComponent(jLabel13))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(thue1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel17))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tongcong, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel13)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel17))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(tien4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
                     .addComponent(bangchu))
-                .addGap(28, 28, 28)
+                .addGap(22, 22, 22)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -633,6 +669,26 @@ public class Payment extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+    
+    public String normalizeInt(int s){
+        String res = "";
+        String x = s+"";
+        int count = 0;
+        for(int i = x.length()-1; i>=0; i--){
+            if(count <2){
+                res = x.charAt(i) +res;
+                count++;
+            }
+            else {
+                res = "." + x.charAt(i) +res;
+                count = 0;
+            }
+        }
+        if (res.contains(".") && res.length() == 4){
+            res = res.substring(1);
+        }
+        return res;
+    }
     public int[] tinhDN(int dn) {
         int res[] = {50, 50, 100, 100, 100, 10000};
         boolean isGreater = true;
@@ -863,8 +919,11 @@ public class Payment extends javax.swing.JFrame {
         res = res.replaceFirst("không đồng", "đồng");
         res = res.replaceFirst("không nghìn", "nghìn");
         res = res.replaceFirst("không trăm linh", "");
+        
         res = res.replaceFirst("linh không", "");
         res = res.replaceFirst("linh nghìn", "nghìn");
+        res = res.replaceFirst("lăm nghìn", "năm nghìn");
+        res = res.replaceFirst("lăm triệu", "năm triệu");
         return res;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -884,6 +943,7 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
