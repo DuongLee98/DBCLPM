@@ -89,6 +89,7 @@ public class Payment extends javax.swing.JFrame {
             thue1.setText(x.substring(2));
         }
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
 
     /**

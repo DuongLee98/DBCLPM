@@ -18,8 +18,10 @@ import View.LeDuong.HomePage;
 public class LoginForm extends javax.swing.JFrame {
     ConnectToDB c = new ConnectToDB();
     public LoginForm() {
+        
         System.out.println("Tung Thanh New Code");
         initComponents();  
+        this.setLocationRelativeTo(null);
     }
     
     public boolean checkLogin(){

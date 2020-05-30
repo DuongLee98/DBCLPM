@@ -29,6 +29,7 @@ public class Calculate extends javax.swing.JFrame {
     private int clicked;
     
     public Calculate() {
+        
         initComponents();
         data = new ArrayList<>();
         connect = new ConnectToDB();
@@ -37,6 +38,7 @@ public class Calculate extends javax.swing.JFrame {
         initData();
         setupViewDropDown();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
         System.out.println("DuongLê new code");
     }
     
