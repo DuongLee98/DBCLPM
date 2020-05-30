@@ -27,6 +27,7 @@ public class Update extends javax.swing.JFrame {
         
         dtm = (DefaultTableModel) tblResult.getModel();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
 
     /**
