@@ -66,6 +66,7 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
         
     });
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
 
     /**
