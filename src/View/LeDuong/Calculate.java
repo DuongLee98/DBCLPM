@@ -288,7 +288,7 @@ public class Calculate extends javax.swing.JFrame {
             b.setMesureId(tmp);
             b.setDate(tmp.getDate());
             b.setTax(10);
-            b.setCustomerId(tmp.getRegistId().getCustomerPersonId().getPersonId());
+//            b.setCustomerId(tmp.getRegistId().getCustomerPersonId().getPersonId());
             //b.setCustomerName(SOMEBITS);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
