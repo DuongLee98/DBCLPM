@@ -85,7 +85,6 @@ public class JoinDAOImpl implements DAO{
                 });
             }
         }    
-        System.out.println(arrObj.size());
         return arrObj;       
     }
     
