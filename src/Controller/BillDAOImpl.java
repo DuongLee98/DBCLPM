@@ -56,6 +56,37 @@ public class BillDAOImpl implements DAO {
         
         return arrBill;
     }
+    
+    public ArrayList<Bill> getBillByIdMesua(int id) {
+        arrBill = new ArrayList<>();
+        int count = 0;
+        if (this.connection != null) {
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM tblteacher");
+            PreparedStatement prstm = null;
+            try {
+                prstm = this.connection.prepareStatement("SELECT * FROM Bill WHERE Mesure = ?");
+                prstm.setInt(1, id);
+                ResultSet rs = prstm.executeQuery();
+                while (rs.next()) {
+                    arrBill.add(new Bill(rs.getInt("Id"),
+                            rs.getString("Date"),
+                            rs.getInt("Tax"),
+                            rs.getInt("PreIndex"),
+                            rs.getInt("CurrentIndex"),
+                            rs.getInt("Unit"),
+                            rs.getInt("Mesure"),
+                            rs.getBoolean("paymentStatus")));
+                    count++;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(BillDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        //System.out.println(count);
+        return arrBill;
+    }
 
     @Override
     public void add() {
@@ -93,7 +124,7 @@ public class BillDAOImpl implements DAO {
     public boolean addBill(Bill b)
     {
         try {
-            String qery = "INSERT INTO bill (MesureId, Date, Tax, PreIndex, CurrentIndex, Unit, Paymentstatus) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String qery = "INSERT INTO bill (Mesure, Date, Tax, PreIndex, CurrentIndex, Unit, Paymentstatus) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = this.connection.prepareCall(qery);
             ps.setInt(1, b.getMesureId());
             ps.setString(2, b.getDate());

@@ -5,57 +5,47 @@
  */
 package View.LeDuong;
 
-import Controller.TaxDAOImpl;
-import Controller.UnitDAOImpl;
-import Database.ConnectToDB;
+import Models.Bill;
 import Models.Tax;
 import Models.Unit;
-import java.sql.Connection;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author duong
  */
-public class PriceList extends javax.swing.JFrame {
-    
-    private ConnectToDB connect;
-    public UnitDAOImpl unitdao;
-    public TaxDAOImpl taxdao;
+public class CalculatePrice extends javax.swing.JDialog {
+
+    /**
+     * Creates new form CalculatePrice
+     */
     public Unit unit;
     public Tax tax;
     public ArrayList<Integer> arrLevel;
     public ArrayList<Integer> arrPrice;
     
-    /**
-     * Creates new form PriceList
-     */
-    public PriceList() {
+    private Calculate calculate;
+    
+    public CalculatePrice(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
-        connectDB();
+        calculate = (Calculate) parent;
         setUpData();
         setUpView();
     }
     
-    void connectDB()
+    public void setUpData()
     {
-        connect = new ConnectToDB();
-        unitdao = new UnitDAOImpl(connect.getCon());
-        taxdao = new TaxDAOImpl(connect.getCon());
+        this.unit = this.calculate.currentunit;
+        this.tax = this.calculate.currenttax;
+        this.arrLevel = stringToListInteger(this.unit.getLevel());
+        this.arrPrice = stringToListInteger(this.unit.getPrice());
     }
     
-    void setUpData()
+    public void setUpView()
     {
-        this.unit = unitdao.getAvailableUnit();
-        this.tax = taxdao.getAvailableTax();
-        arrLevel = stringToListInteger(this.unit.getLevel());
-        arrPrice = stringToListInteger(this.unit.getPrice());
-    }
-    
-    void setUpView()
-    {
-        
         int st = 0;
         int en = st + arrLevel.get(0);
         this.jLabel7.setText("Cho kWh: " + st + " - " + en);
@@ -85,39 +75,31 @@ public class PriceList extends javax.swing.JFrame {
         this.jLabel20.setText(this.tax.getValue()+" %");
         
         this.jLabel21.setText(this.unit.getDes() + " - " + this.tax.getDes());
+        
+        this.jLabel23.setText(Calculate()+"");
+        this.jButton1.setEnabled(this.calculate.canchange);
     }
     
-    public ArrayList<String> stringToListString(String data)
+    public Double Calculate()
     {
-        ArrayList<String> rs = new ArrayList<>();
-        String[] spl = data.split("\\|");
-        for (int i=0; i<spl.length; i++)
+        Double rs = 0.0;
+        int sd = this.calculate.total;
+        for (int i=0; i<this.arrLevel.size()-1; i++)
         {
-            String tmp = spl[i];
-            System.out.println(tmp);
-            rs.add(tmp);
+            int level = this.arrLevel.get(i);
+            if (sd < 0)
+            {
+                break;
+            }
+            int tmp = Math.min(sd, level);
+            rs += tmp*this.arrPrice.get(i);
+            sd -= tmp;
         }
-        return rs;
-    }
-    
-    public ArrayList<Float> stringToListFloat(String data)
-    {
-        ArrayList<Float> rs = new ArrayList<>();
-        String[] spl = data.split("\\|");
-        for (int i=0; i<spl.length; i++)
+        if (sd > 0)
         {
-            String tmp = spl[i];
-            if(tmp!="-")
-            {
-                float sd = Float.parseFloat(tmp);
-                rs.add(sd);
-            }
-            else
-            {
-                rs.add((float)-1);
-            }
+            rs += sd*this.arrPrice.get(5);
         }
-        return rs;
+        return rs+(rs * this.tax.getValue()/100);
     }
     
     public ArrayList<Integer> stringToListInteger(String data)
@@ -150,47 +132,32 @@ public class PriceList extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jLabel21 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("Bac 1:");
-
-        jLabel2.setText("Bac 2:");
-
-        jLabel3.setText("Bac 3:");
-
-        jLabel4.setText("Bac 4:");
-
-        jLabel5.setText("Bac 5:");
-
-        jLabel6.setText("Bac 6:");
-
-        jLabel7.setText("jlabel 7");
-
-        jLabel8.setText("jLabel8");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel9.setText("jLabel9");
 
@@ -198,39 +165,52 @@ public class PriceList extends javax.swing.JFrame {
 
         jLabel11.setText("jLabel11");
 
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel21.setText("jLabel21");
+        jLabel21.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jLabel1.setText("Bac 1:");
+
         jLabel12.setText("jLabel12");
+
+        jLabel2.setText("Bac 2:");
 
         jLabel13.setText("jLabel13");
 
+        jLabel3.setText("Bac 3:");
+
         jLabel14.setText("jLabel14");
+
+        jLabel4.setText("Bac 4:");
 
         jLabel15.setText("jLabel15");
 
+        jLabel5.setText("Bac 5:");
+
         jLabel16.setText("jLabel16");
+
+        jLabel6.setText("Bac 6:");
 
         jLabel17.setText("jLabel17");
 
+        jLabel7.setText("jlabel 7");
+
         jLabel18.setText("jLabel18");
+
+        jLabel8.setText("jLabel8");
 
         jLabel19.setText("Thue:");
 
         jLabel20.setText("jLabel20");
 
-        jButton1.setText("Sua bang gia");
+        jLabel22.setText("Tổng: ");
+
+        jLabel23.setText("jLabel23");
+
+        jButton1.setText("Tao Bill");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
-            }
-        });
-
-        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel21.setText("jLabel21");
-        jLabel21.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        jButton2.setText("Sua thue");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
             }
         });
 
@@ -239,93 +219,96 @@ public class PriceList extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel19))
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel20)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel11)
-                                    .addComponent(jLabel13)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel17))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel12)
-                                    .addComponent(jLabel14)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel18))
-                                .addGap(190, 190, 190))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addComponent(jButton1))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(69, 69, 69)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel17))
+                        .addGap(65, 65, 65))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel23))
+                .addGap(97, 97, 97))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(165, 165, 165)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(54, 54, 54)
                 .addComponent(jLabel21)
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
-                .addGap(40, 40, 40)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10))
-                .addGap(32, 32, 32)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12))
-                .addGap(40, 40, 40)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel13)
                     .addComponent(jLabel14))
-                .addGap(36, 36, 36)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel15)
                     .addComponent(jLabel16))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel17)
                     .addComponent(jLabel18))
-                .addGap(57, 57, 57)
-                .addComponent(jButton1)
-                .addGap(77, 77, 77)
+                .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(jLabel20))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(29, 29, 29))
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(jLabel23))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         pack();
@@ -333,15 +316,22 @@ public class PriceList extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        UpdatePrice up = new UpdatePrice(this, true);
-        up.setVisible(true);
+        Bill b = new Bill(0, this.calculate.currentmesure.getDate(), this.tax.getId(), this.calculate.currentPreIndex, this.calculate.currentCurIndex, this.unit.getId(), this.calculate.currentmesure.getId(), false);
+        boolean rt = this.calculate.billdao.addBill(b);
+        if (rt)
+        {
+            JOptionPane.showMessageDialog(this, "Them loi", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Them thanh cong", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+        this.calculate.initData();
+        this.calculate.setupViewTable();
+        this.calculate.updateData();
+        setUpData();
+        setUpView();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        UpdateTax ut = new UpdateTax(this, true);
-        ut.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -360,27 +350,33 @@ public class PriceList extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PriceList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CalculatePrice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PriceList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CalculatePrice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PriceList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CalculatePrice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PriceList.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CalculatePrice.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PriceList().setVisible(true);
+                CalculatePrice dialog = new CalculatePrice(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -395,6 +391,8 @@ public class PriceList extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
