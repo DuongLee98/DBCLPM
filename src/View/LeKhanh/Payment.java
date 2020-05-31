@@ -6,8 +6,10 @@
 package View.LeKhanh;
 
 import Controller.BillDAOImpl;
+import Controller.TaxDAOImpl;
+import Controller.UnitDAOImpl;
 import java.sql.*;
-import java.text.DecimalFormat;
+
 import javax.swing.JOptionPane;
 import Models.*;
 import javax.swing.JFrame;
@@ -22,13 +24,28 @@ public class Payment extends javax.swing.JFrame {
      * Creates new form Payment
      */
     int[] listUnit = new int[6];
-    
+    UnitDAOImpl udi;
+    TaxDAOImpl tdi;
     Connection con;
     int billId;
-
+    double tax;
     public Payment(Object[] o, Connection con) {
         initComponents();
         this.con = con;
+        udi = new UnitDAOImpl(this.con);
+        tdi = new TaxDAOImpl(this.con);
+        tax = tdi.getAvailableTax().getValue();
+        jLabel21.setText(tax+"%");
+        String[] units = udi.getAvailableUnit().getPrice().split("\\|");
+
+        dg1.setText(normalizeInt(Integer.parseInt(units[0])));
+        dg2.setText(normalizeInt(Integer.parseInt(units[1])));
+        dg3.setText(normalizeInt(Integer.parseInt(units[2])));
+        dg4.setText(normalizeInt(Integer.parseInt(units[3])));
+        dg5.setText(normalizeInt(Integer.parseInt(units[4])));
+        dg6.setText(normalizeInt(Integer.parseInt(units[5])));
+        //System.out.println("fas: "+units[0]+" "+normalizeInt(Integer.parseInt(units[0])));
+
         jname.setText(o[1].toString() + " " + o[2].toString() + " " + o[3].toString());
         jadd.setText(o[4].toString() + ", " + o[5].toString());
         jcusid.setText(o[0].toString());
@@ -44,26 +61,56 @@ public class Payment extends javax.swing.JFrame {
         this.tong.setText(normalizeInt(tongDN));
         int[] dntt = new int[6];
         dntt = tinhDN(tongDN);
+
         tt1.setText(normalizeInt(dntt[0]));
         tt2.setText(normalizeInt(dntt[1]));
         tt3.setText(normalizeInt(dntt[2]));
         tt4.setText(normalizeInt(dntt[3]));
         tt5.setText(normalizeInt(dntt[4]));
         tt6.setText(normalizeInt(dntt[5]));
-        double thanhtien1 = Double.parseDouble(dntt[0] * Double.parseDouble(dg1.getText())+"");
-        double thanhtien2 = Double.parseDouble(dntt[1] * Double.parseDouble(dg2.getText())+"");
-        double thanhtien3 = Double.parseDouble(dntt[2] * Double.parseDouble(dg3.getText())+"");
-        double thanhtien4 = Double.parseDouble(dntt[3] * Double.parseDouble(dg4.getText())+"");
-        double thanhtien5 = Double.parseDouble(dntt[4] * Double.parseDouble(dg5.getText())+"");
-        double thanhtien6 = Double.parseDouble(dntt[5] * Double.parseDouble(dg6.getText())+"");
-        
-        tien1.setText(String.format("%.03f", thanhtien1));
-        tien2.setText(String.format("%.03f", thanhtien2));
-        tien3.setText(String.format("%.03f", thanhtien3));
-        tien4.setText(String.format("%.03f", thanhtien4));
-        tien5.setText(String.format("%.03f", thanhtien5));
-        tien6.setText(String.format("%.03f", thanhtien6));
-        tongtt.setText(normalizeInt(tongDN ));
+        double thanhtien1 = Double.parseDouble(dntt[0] * Double.parseDouble(dg1.getText()) + "");
+        double thanhtien2 = Double.parseDouble(dntt[1] * Double.parseDouble(dg2.getText()) + "");
+        double thanhtien3 = Double.parseDouble(dntt[2] * Double.parseDouble(dg3.getText()) + "");
+        double thanhtien4 = Double.parseDouble(dntt[3] * Double.parseDouble(dg4.getText()) + "");
+        double thanhtien5 = Double.parseDouble(dntt[4] * Double.parseDouble(dg5.getText()) + "");
+        double thanhtien6 = Double.parseDouble(dntt[5] * Double.parseDouble(dg6.getText()) + "");
+        if (thanhtien1 != 0) {
+            tien1.setText(String.format("%.03f", thanhtien1));
+        } else {
+            tien1.setText("0");
+        }
+        if (thanhtien2 != 0) {
+            tien2.setText(String.format("%.03f", thanhtien2));
+        } else {
+            tien2.setText("0");
+        }
+        if (thanhtien3 != 0) {
+            tien3.setText(String.format("%.03f", thanhtien3));
+        } else {
+            tien3.setText("0");
+        }
+        if (thanhtien4 != 0) {
+            tien4.setText(String.format("%.03f", thanhtien4));
+        } else {
+            tien4.setText("0");
+        }
+        if (thanhtien5 != 0) {
+            tien5.setText(String.format("%.03f", thanhtien5));
+        } else {
+            tien5.setText("0");
+        }
+        if (thanhtien6 != 0) {
+            tien6.setText(String.format("%.03f", thanhtien6));
+        } else {
+            tien6.setText("0");
+        }
+//        tien1.setText(String.format("%.03f", thanhtien1));
+//        tien2.setText(String.format("%.03f", thanhtien2));
+//        tien3.setText(String.format("%.03f", thanhtien3));
+//        tien4.setText(String.format("%.03f", thanhtien4));
+//        tien5.setText(String.format("%.03f", thanhtien5));
+//        tien6.setText(String.format("%.03f", thanhtien6));
+        tongtt.setText(normalizeInt(tongDN));
 
         double tongThanhTien = thanhtien1
                 + thanhtien2
@@ -71,10 +118,13 @@ public class Payment extends javax.swing.JFrame {
                 + thanhtien4
                 + thanhtien5
                 + thanhtien6;
-        
-        tongthanhtien.setText(String.format("%.03f", tongThanhTien ));
-        thue1.setText(String.format("%.03f", tongThanhTien*0.1));
-        tongcong.setText(normalize(String.format("%.03f",(tongThanhTien + tongThanhTien * 0.1))));
+
+        tongthanhtien.setText(normalize(String.format("%.03f", tongThanhTien)));
+        double thue = tongThanhTien * (tax/100);
+
+        thue1.setText(normalize(String.format("%.03f", thue)));
+
+        tongcong.setText(normalize(String.format("%.03f", (tongThanhTien + tongThanhTien * (tax/100)))));
         bangchu.setText(toWord(tongcong.getText().split("\\.")));
         tien1.setText(normalize(tien1.getText()));
         tien2.setText(normalize(tien2.getText()));
@@ -83,11 +133,11 @@ public class Payment extends javax.swing.JFrame {
         tien5.setText(normalize(tien5.getText()));
         tien6.setText(normalize(tien6.getText()));
         tongthanhtien.setText(normalize(tongthanhtien.getText()));
-        String x = thue1.getText();
-        System.out.println(x);
-        if(x.contains(".") && x.length() == 5){
-            thue1.setText(x.substring(2));
-        }
+//        String x = thue1.getText();
+//        System.out.println(x);
+//        if(x.contains(".") && x.length() == 5){
+//            thue1.setText(x.substring(2));
+//        }
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
     }
@@ -160,6 +210,7 @@ public class Payment extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
 
         jLabel20.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel20.setText("Chi so cu");
@@ -215,7 +266,6 @@ public class Payment extends javax.swing.JFrame {
 
         dg1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         dg1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dg1.setText("1.678");
         dg1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien4.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
@@ -274,22 +324,18 @@ public class Payment extends javax.swing.JFrame {
 
         dg2.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         dg2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dg2.setText("1.734");
         dg2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg3.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         dg3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dg3.setText("2.014");
         dg3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg4.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         dg4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dg4.setText("2.536");
         dg4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         dg5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         dg5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dg5.setText("2.834");
         dg5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         lb.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
@@ -330,14 +376,13 @@ public class Payment extends javax.swing.JFrame {
 
         dg6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         dg6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        dg6.setText("2.927");
         dg6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         tien6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         tien6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         tien6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
-        jLabel13.setText("+Thuế: 10%");
+        jLabel13.setText("+Thuế: ");
 
         tongcong.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         tongcong.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -366,6 +411,8 @@ public class Payment extends javax.swing.JFrame {
         jLabel19.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(128, 128, 128), 1, true));
 
         jLabel14.setText("* Đơn vị: VNĐ");
+
+        jLabel21.setText("taxvalue");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -429,7 +476,10 @@ public class Payment extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addComponent(jLabel12)
-                                        .addComponent(jLabel13)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel13)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel21))
                                         .addComponent(jLabel17)
                                         .addComponent(jLabel14))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -558,19 +608,19 @@ public class Payment extends javax.swing.JFrame {
                     .addComponent(tien2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tt2)
-                        .addComponent(dg2)))
+                        .addComponent(dg2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tien3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tt3)
-                        .addComponent(dg3)))
+                        .addComponent(dg3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tt4)
-                            .addComponent(dg4))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tt4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dg4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -583,13 +633,13 @@ public class Payment extends javax.swing.JFrame {
                                     .addComponent(tien5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(tt5)
-                                        .addComponent(dg5)))
+                                        .addComponent(dg5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(tt6)
-                                            .addComponent(dg6))
+                                            .addComponent(dg6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -601,7 +651,9 @@ public class Payment extends javax.swing.JFrame {
                                         .addGap(12, 12, 12)
                                         .addComponent(tongthanhtien, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(17, 17, 17)
-                                .addComponent(jLabel13)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel21))
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel17))))
                     .addGroup(layout.createSequentialGroup()
@@ -625,12 +677,15 @@ public class Payment extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (JOptionPane.showConfirmDialog(null, "Xác nhận thanh toán?", "WARNING",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                
+
             BillDAOImpl bdi = new BillDAOImpl(this.con);
             Bill bill = new Bill();
             bill.setId(this.billId);
             bill.setPaymentStatus(true);
             bdi.edit(bill);
+            JOptionPane.showMessageDialog(rootPane, "Thanh toán thành công");
+            this.setVisible(false);
+            this.dispose();
         } else {
             // no option
         }
@@ -670,32 +725,31 @@ public class Payment extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    
-    public String normalizeInt(int s){
+    public String normalizeInt(int s) {
         String res = "";
-        String x = s+"";
+        String x = s + "";
         int count = 0;
-        for(int i = x.length()-1; i>=0; i--){
-            if(count <2){
-                res = x.charAt(i) +res;
+        for (int i = x.length() - 1; i >= 0; i--) {
+            if (count < 2) {
+                res = x.charAt(i) + res;
                 count++;
-            }
-            else {
-                res = "." + x.charAt(i) +res;
+            } else {
+                res = "." + x.charAt(i) + res;
                 count = 0;
             }
         }
-        if (res.contains(".") && res.length() == 4){
+        if (res.contains(".") && res.length() == 4) {
             res = res.substring(1);
         }
         return res;
     }
+
     public int[] tinhDN(int dn) {
         int res[] = {50, 50, 100, 100, 100, 10000};
         boolean isGreater = true;
         for (int i = 0; i < 6; i++) {
             if (isGreater) {
-                
+
                 if (dn - res[i] > 0) {
                     dn = dn - res[i];
                 } else {
@@ -718,27 +772,29 @@ public class Payment extends javax.swing.JFrame {
 
     String normalize(String s) {
         String ret = "";
-        String[] so = s.split("\\.");
-        
-        int n = so[0].length() % 3 + 1;
-        
-        ret += so[1];
+        if (s.length() >= 5) {
+            String[] so = s.split("\\.");
+            int n = so[0].length() % 3 + 1;
 
-        int index = so[0].length() - 1;
-        while (index >= 0 && n > 0) {
-            String tmp = "";
-            for (int i = 0; i < 3; i++) {
-                if (index >= i) {
-                    tmp = so[0].charAt(index - i) + tmp;
-                } else {
-                    break;
+            ret += so[1];
+
+            int index = so[0].length() - 1;
+            while (index >= 0 && n > 0) {
+                String tmp = "";
+                for (int i = 0; i < 3; i++) {
+                    if (index >= i) {
+                        tmp = so[0].charAt(index - i) + tmp;
+                    } else {
+                        break;
+                    }
                 }
+                ret = tmp + "." + ret;
+
+                index -= 3;
             }
-            ret = tmp + "." + ret;
-            
-            index -= 3;
+            return ret;
         }
-        return ret;
+        else return s;
     }
 
     String numToWord(char s, int ind) {
@@ -840,11 +896,10 @@ public class Payment extends javax.swing.JFrame {
                 s[0] = "0" + s[0];
 
             }
-            
+
             for (int i = 0; i < 3; i++) {
 
                 String r = numToWord(s[0].charAt(i), i);
-                
 
                 res += r + " ";
 
@@ -875,11 +930,10 @@ public class Payment extends javax.swing.JFrame {
                 s[0] = "0" + s[0];
 
             }
-            
+
             for (int i = 0; i < 3; i++) {
 
                 String r = numToWord(s[0].charAt(i), i);
-                
 
                 res += r + " ";
 
@@ -920,7 +974,7 @@ public class Payment extends javax.swing.JFrame {
         res = res.replaceFirst("không đồng", "đồng");
         res = res.replaceFirst("không nghìn", "nghìn");
         res = res.replaceFirst("không trăm linh", "");
-        
+
         res = res.replaceFirst("linh không", "");
         res = res.replaceFirst("linh nghìn", "nghìn");
         res = res.replaceFirst("lăm nghìn", "năm nghìn");
@@ -952,6 +1006,7 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel3;

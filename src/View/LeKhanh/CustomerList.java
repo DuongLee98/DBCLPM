@@ -58,9 +58,9 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
             {
                 lock = false;
             }
-            else {
-                lock = true;
-            }
+//            else {
+//                lock = true;
+//            }
         }
         
         
@@ -214,7 +214,8 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
 //            };
 //            pre = (int) arrObj.get(selRow)[7];
 //            cur = (int) arrObj.get(selRow)[8];
-        new Payment(arrObj.get(selRow), this.con).setVisible(true);
+            new Payment(arrObj.get(selRow), this.con).setVisible(true);
+            
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -289,7 +290,7 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
                 tb1.setValueAt(obj.get(i)[6], i, 3);
                 tb1.setValueAt(obj.get(i)[7], i, 4);
                 tb1.setValueAt(obj.get(i)[8], i, 5);
-                tb1.setValueAt(obj.get(i)[9], i, 6);
+                tb1.setValueAt("Chưa đóng tiền", i, 6);
                //tb1.addRow(obj.get(i));
             }
             
@@ -305,8 +306,13 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
     public void run() {
         while(true){
             while(testAndSet()){
-                if(jTextField1.getText().trim().equals(""))
-                    tb1.setRowCount(0);
+                try {
+                    if(jTextField1.getText().trim().equals("") || (this.jdi.searchByID(jTextField1.getText()).size() ==0))
+                        tb1.setRowCount(0);
+                    else lock = false;
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerList.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
@@ -314,7 +320,6 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
                 }
             }
             searchText = jTextField1.getText();
-            System.out.println(searchText);
             if(!searchText.equals("")){
                 try {
                     arrObj = this.jdi.searchByID(searchText);
