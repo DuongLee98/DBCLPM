@@ -21,20 +21,15 @@ public class Bill implements Serializable {
     private String date;
     
     private int tax;
-    
-    private int customerId;
-    
-    private int customerName;
-    
-    private int customerPhone;
-    
+   
     private int preIndex;
     
     private int currentIndex;
     
     private Integer listUnit;
     
-    private Mesure mesureId;
+    private int mesureId;
+    private int unitID;
     
     private boolean paymentStatus;
 
@@ -52,14 +47,15 @@ public class Bill implements Serializable {
         this.id = id;
     }
 
-    public Bill(Integer id, int tax, int customerId, int customerName, int customerPhone, int preIndex, int currentIndex) {
+    public Bill(Integer id, String date, int tax, int preIndex, int currentIndex, int unit, int measureid, boolean p) {
         this.id = id;
         this.tax = tax;
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.customerPhone = customerPhone;
+        this.date = date;
         this.preIndex = preIndex;
         this.currentIndex = currentIndex;
+        this.unitID = unit;
+        this.mesureId = measureid;
+        this.paymentStatus = p;
     }
 
     public Integer getId() {
@@ -86,30 +82,6 @@ public class Bill implements Serializable {
         this.tax = tax;
     }
 
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public int getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(int customerName) {
-        this.customerName = customerName;
-    }
-
-    public int getCustomerPhone() {
-        return customerPhone;
-    }
-
-    public void setCustomerPhone(int customerPhone) {
-        this.customerPhone = customerPhone;
-    }
-
     public int getPreIndex() {
         return preIndex;
     }
@@ -126,19 +98,25 @@ public class Bill implements Serializable {
         this.currentIndex = currentIndex;
     }
 
-    public Integer getListUnit() {
-        return listUnit;
-    }
 
     public void setListUnit(Integer listUnit) {
         this.listUnit = listUnit;
     }
 
-    public Mesure getMesureId() {
+    public int getMesureId() {
         return mesureId;
     }
 
     public void setMesureId(Mesure mesureId) {
-        this.mesureId = mesureId;
+        this.mesureId = mesureId.getId();
     }
+
+    public int getUnitID() {
+        return unitID;
+    }
+
+    public void setUnitID(int unitID) {
+        this.unitID = unitID;
+    }
+    
 }
