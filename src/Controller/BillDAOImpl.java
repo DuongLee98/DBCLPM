@@ -39,12 +39,13 @@ public class BillDAOImpl implements DAO {
                 ;
                 while (rs.next()) {
                     arrBill.add(new Bill(rs.getInt("Id"),
+                            rs.getString("Date"),
                             rs.getInt("Tax"),
-                            rs.getInt("CustomerId"),
-                            rs.getInt("CustomerName"),
-                            rs.getInt("CustomerPhone"),
                             rs.getInt("PreIndex"),
-                            rs.getInt("CurrentIndex")));
+                            rs.getInt("CurrentIndex"),
+                            rs.getInt("Unit"),
+                            rs.getInt("Mesure"),
+                            rs.getBoolean("paymentStatus")));
                     count++;
                 }
             } catch (SQLException ex) {
@@ -53,6 +54,37 @@ public class BillDAOImpl implements DAO {
 
         }
         
+        return arrBill;
+    }
+    
+    public ArrayList<Bill> getBillByIdMesua(int id) {
+        arrBill = new ArrayList<>();
+        int count = 0;
+        if (this.connection != null) {
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM tblteacher");
+            PreparedStatement prstm = null;
+            try {
+                prstm = this.connection.prepareStatement("SELECT * FROM Bill WHERE Mesure = ?");
+                prstm.setInt(1, id);
+                ResultSet rs = prstm.executeQuery();
+                while (rs.next()) {
+                    arrBill.add(new Bill(rs.getInt("Id"),
+                            rs.getString("Date"),
+                            rs.getInt("Tax"),
+                            rs.getInt("PreIndex"),
+                            rs.getInt("CurrentIndex"),
+                            rs.getInt("Unit"),
+                            rs.getInt("Mesure"),
+                            rs.getBoolean("paymentStatus")));
+                    count++;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(BillDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        //System.out.println(count);
         return arrBill;
     }
 
@@ -92,17 +124,15 @@ public class BillDAOImpl implements DAO {
     public boolean addBill(Bill b)
     {
         try {
-            String qery = "INSERT INTO bill (MesureId, Date, Tax, CustomerId, CustomerName, CustomerPhone, PreIndex, CurrentIndex, Paymentstatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String qery = "INSERT INTO bill (Mesure, Date, Tax, PreIndex, CurrentIndex, Unit, Paymentstatus) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = this.connection.prepareCall(qery);
-            ps.setInt(1, b.getMesureId().getId());
+            ps.setInt(1, b.getMesureId());
             ps.setString(2, b.getDate());
             ps.setInt(3, b.getTax());
-            ps.setInt(4, b.getCustomerId());
-            ps.setInt(5, b.getCustomerName());
-            ps.setInt(6, b.getCustomerPhone());
-            ps.setInt(7, b.getPreIndex());
-            ps.setInt(8, b.getCurrentIndex());
-            ps.setInt(9, 0);
+            ps.setInt(4, b.getPreIndex());
+            ps.setInt(5, b.getCurrentIndex());
+            ps.setInt(6, b.getUnitID());
+            ps.setInt(7, 0);
             return ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(BillDAOImpl.class.getName()).log(Level.SEVERE, null, ex);

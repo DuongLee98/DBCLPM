@@ -5,11 +5,16 @@
  */
 package View.LeDuong;
 
+import Controller.BillDAOImpl;
 import Controller.StationDAOImpl;
+import Controller.TaxDAOImpl;
+import Controller.UnitDAOImpl;
 import Database.ConnectToDB;
 import Models.Bill;
 import Models.Mesure;
 import Models.Station;
+import Models.Tax;
+import Models.Unit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -26,7 +31,20 @@ public class Calculate extends javax.swing.JFrame {
     private ArrayList<Station> data;
     private ConnectToDB connect;
     private StationDAOImpl sdao;
+    public BillDAOImpl billdao;
+    private TaxDAOImpl taxdao;
+    private UnitDAOImpl unitdao;
+    
+    public Tax currenttax;
+    public Unit currentunit;
+    public Mesure currentmesure;
+    public int total;
+    public int currentPreIndex;
+    public int currentCurIndex;
+    public boolean canchange;
+    
     private int clicked;
+    private int selected;
     
     public Calculate() {
         
@@ -34,6 +52,10 @@ public class Calculate extends javax.swing.JFrame {
         data = new ArrayList<>();
         connect = new ConnectToDB();
         sdao = new StationDAOImpl(connect.getCon());
+        billdao = new BillDAOImpl(connect.getCon());
+        taxdao = new TaxDAOImpl(connect.getCon());
+        unitdao = new UnitDAOImpl(connect.getCon());
+        
         
         initData();
         setupViewDropDown();
@@ -56,7 +78,7 @@ public class Calculate extends javax.swing.JFrame {
         }
     }
     
-    public void setupViewTable(int select)
+    public void setupViewTable()
     {
         
         DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
@@ -66,46 +88,88 @@ public class Calculate extends javax.swing.JFrame {
             dtm.removeRow(0);
         }
         
-        ArrayList<Mesure> listMesure = data.get(select).getMesureArrayList();
+        ArrayList<Mesure> listMesure = data.get(clicked).getMesureArrayList();
         System.out.println(listMesure.size());
         for (int i=0; i<listMesure.size(); i++)
         {
             Mesure tm = listMesure.get(i);
-            Object [] dt = {tm.getId(), tm.getDate(), tm.getPreIndex(), tm.getCurrentIndex(), tm.getCurrentIndex()-tm.getPreIndex(), caculate(tm.getCurrentIndex()-tm.getPreIndex()), true};
-            dtm.addRow(dt);
+            boolean find = false;
+            Bill btmp = new Bill();
+            if (tm.getBillArrayList() != null)
+            {
+                //System.out.println(tm.getBillArrayList().size());
+                
+                for (int j=0; j<tm.getBillArrayList().size(); j++)
+                {
+                    if (tm.getDate() == null ? tm.getBillArrayList().get(j).getDate() == null : tm.getDate().equals(tm.getBillArrayList().get(j).getDate()))
+                    {
+                        find = true;
+                        btmp = tm.getBillArrayList().get(j);
+                        break;
+                    }
+                }
+            }
+            if (find == false)
+            {
+                Object [] dt = {tm.getId(), tm.getDate(), tm.getPreIndex(), tm.getCurrentIndex(), tm.getCurrentIndex()-tm.getPreIndex(), false};
+                dtm.addRow(dt);
+            }
+            else
+            {
+                Object [] dt = {tm.getId(), btmp.getDate(), btmp.getPreIndex(), btmp.getCurrentIndex(), btmp.getCurrentIndex()-btmp.getPreIndex(), true};
+                dtm.addRow(dt);
+            }
         }
     }
     
-    public void setupInfo(int select)
+    public void setupInfo()
     {
-        jLabel3.setText(data.get(select).getCompanyId().getName());
-        jLabel5.setText(data.get(select).getCompanyId().getAddressId().getNumber()+"");
-        jLabel6.setText(data.get(select).getCompanyId().getAddressId().getStreet());
+        jLabel3.setText(data.get(clicked).getCompanyId().getName());
+        jLabel5.setText(data.get(clicked).getCompanyId().getAddressId().getNumber()+"");
+        jLabel6.setText(data.get(clicked).getCompanyId().getAddressId().getStreet());
     }
     
-    public double caculate(int total)
+    public void updateData()
     {
-        int arrsd [] = {50, 100, 200, 300, 400, 10000000};
-        double money [] = {1678, 1734, 2014, 2536, 2834, 2927};
-        int spli [] = {0, 0, 0, 0, 0, 0};
-        double sum = 0;
-        for (int i=0; i<6; i++)
+        
+        this.currentmesure = data.get(clicked).getMesureArrayList().get(selected);
+        boolean find = false;
+        Bill btmp = new Bill();
+        if (currentmesure.getBillArrayList() != null)
         {
-            if (arrsd[i]<total)
+            //System.out.println(tm.getBillArrayList().size());
+
+            for (int j=0; j<currentmesure.getBillArrayList().size(); j++)
             {
-                spli[i] = total-arrsd[i];
-                sum += spli[i]*money[i];
-                break;
+                if (currentmesure.getDate() == null ? currentmesure.getBillArrayList().get(j).getDate() == null : currentmesure.getDate().equals(currentmesure.getBillArrayList().get(j).getDate()))
+                {
+                    find = true;
+                    btmp = currentmesure.getBillArrayList().get(j);
+                    break;
+                }
             }
-            spli[i] = arrsd[i];
-            sum += spli[i]*money[i];
-            if (arrsd[i] == total)
-            {
-                break;
-            }
+        }
+        if (find == true)
+        {
+            this.currentunit = unitdao.getUnitById(btmp.getUnitID());
+            this.currenttax = taxdao.getTaxById(btmp.getTax());
+            this.currentPreIndex = btmp.getPreIndex();
+            this.currentCurIndex = btmp.getCurrentIndex();
+            this.total = btmp.getCurrentIndex() - btmp.getPreIndex();
+            this.canchange = false;
             
         }
-        return sum+(sum*0.1);
+        else
+        {
+            this.currentunit = unitdao.getAvailableUnit();
+            this.currenttax = taxdao.getAvailableTax();
+            this.total = currentmesure.getCurrentIndex() - currentmesure.getPreIndex();
+            this.currentPreIndex = currentmesure.getPreIndex();
+            this.currentCurIndex = currentmesure.getCurrentIndex();
+            this.canchange = true;
+        }
+        System.out.println("mid " + currentmesure.getId());
+        
     }
 
     /**
@@ -137,14 +201,14 @@ public class Calculate extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id", "Date", "PreIndex", "CurrentIndex", "Total", "Calculate", "Status"
+                "Id", "Date", "PreIndex", "CurrentIndex", "Total", "In Bill"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -212,7 +276,7 @@ public class Calculate extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel7.setText("Tính tiền điện");
 
-        jButton1.setText("Tạo Hóa Đơn");
+        jButton1.setText("Tính tiền điện");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -270,27 +334,20 @@ public class Calculate extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
-        int click = jComboBox1.getSelectedIndex();
-        this.clicked = click;
-        setupViewTable(click);
-        setupInfo(click);
+        this.clicked = jComboBox1.getSelectedIndex();
+        //this.clicked = click;
+        setupViewTable();
+        setupInfo();
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
-        ArrayList<Mesure> arrMs = data.get(this.clicked).getMesureArrayList();
-        
-        for (int i=0; i<arrMs.size(); i++)
-        {
-            Mesure tmp = arrMs.get(i);
-            Bill b = new Bill();
-            b.setMesureId(tmp);
-            b.setDate(tmp.getDate());
-            b.setTax(10);
-            b.setCustomerId(tmp.getRegistId().getCustomerPersonId().getPersonId());
-            //b.setCustomerName(SOMEBITS);
-        }
+        selected = jTable1.getSelectedRow();
+        if (selected == -1)
+            return;
+        updateData();
+        CalculatePrice cp = new CalculatePrice(this, true);
+        cp.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
