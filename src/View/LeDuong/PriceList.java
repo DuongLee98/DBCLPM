@@ -8,10 +8,13 @@ package View.LeDuong;
 import Controller.TaxDAOImpl;
 import Controller.UnitDAOImpl;
 import Database.ConnectToDB;
+import Function.CalculateFnc;
 import Models.Tax;
 import Models.Unit;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -49,10 +52,14 @@ public class PriceList extends javax.swing.JFrame {
     
     void setUpData()
     {
-        this.unit = unitdao.getAvailableUnit();
-        this.tax = taxdao.getAvailableTax();
-        arrLevel = stringToListInteger(this.unit.getLevel());
-        arrPrice = stringToListInteger(this.unit.getPrice());
+        try {
+            this.unit = unitdao.getAvailableUnit();
+            this.tax = taxdao.getAvailableTax();
+            arrLevel = CalculateFnc.stringToListInteger(this.unit.getLevel());
+            arrPrice = CalculateFnc.stringToListInteger(this.unit.getPrice());
+        } catch (Exception ex) {
+            Logger.getLogger(PriceList.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     void setUpView()
@@ -89,59 +96,7 @@ public class PriceList extends javax.swing.JFrame {
         this.jLabel21.setText(this.unit.getDes() + " - " + this.tax.getDes());
     }
     
-    public ArrayList<String> stringToListString(String data)
-    {
-        ArrayList<String> rs = new ArrayList<>();
-        String[] spl = data.split("\\|");
-        for (int i=0; i<spl.length; i++)
-        {
-            String tmp = spl[i];
-            System.out.println(tmp);
-            rs.add(tmp);
-        }
-        return rs;
-    }
     
-    public ArrayList<Float> stringToListFloat(String data)
-    {
-        ArrayList<Float> rs = new ArrayList<>();
-        String[] spl = data.split("\\|");
-        for (int i=0; i<spl.length; i++)
-        {
-            String tmp = spl[i];
-            if(tmp!="-")
-            {
-                float sd = Float.parseFloat(tmp);
-                rs.add(sd);
-            }
-            else
-            {
-                rs.add((float)-1);
-            }
-        }
-        return rs;
-    }
-    
-    public ArrayList<Integer> stringToListInteger(String data)
-    {
-        ArrayList<Integer> rs = new ArrayList<>();
-        String[] spl = data.split("\\|");
-        for (int i=0; i<spl.length; i++)
-        {
-            String tmp = spl[i];
-            //System.out.println(tmp);
-            if(!"-".equals(tmp))
-            {
-                int sd = Integer.parseInt(tmp);
-                rs.add(sd);
-            }
-            else
-            {
-                rs.add((int) -1);
-            }
-        }
-        return rs;
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.

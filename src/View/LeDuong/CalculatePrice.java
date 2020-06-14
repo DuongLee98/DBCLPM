@@ -5,10 +5,13 @@
  */
 package View.LeDuong;
 
+import Function.CalculateFnc;
 import Models.Bill;
 import Models.Tax;
 import Models.Unit;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -38,90 +41,57 @@ public class CalculatePrice extends javax.swing.JDialog {
     
     public void setUpData()
     {
-        this.unit = this.calculate.currentunit;
-        this.tax = this.calculate.currenttax;
-        this.arrLevel = stringToListInteger(this.unit.getLevel());
-        this.arrPrice = stringToListInteger(this.unit.getPrice());
+        try {
+            this.unit = this.calculate.currentunit;
+            this.tax = this.calculate.currenttax;
+            this.arrLevel = CalculateFnc.stringToListInteger(this.unit.getLevel());
+            this.arrPrice = CalculateFnc.stringToListInteger(this.unit.getPrice());
+        } catch (Exception ex) {
+            Logger.getLogger(CalculatePrice.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void setUpView()
     {
-        int st = 0;
-        int en = st + arrLevel.get(0);
-        this.jLabel7.setText("Cho kWh: " + st + " - " + en);
-        st = en;
-        en = st + arrLevel.get(1);
-        this.jLabel9.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        en = st + arrLevel.get(2);
-        this.jLabel11.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        en = st + arrLevel.get(3);
-        this.jLabel13.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        en = st + arrLevel.get(4);
-        this.jLabel15.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        //en = st + arrLevel.get(4);
-        this.jLabel17.setText("Cho kWh: " + (st+1) + " - " + "Trở lên");
-        
-        this.jLabel8.setText(arrPrice.get(0) + " đồng/kWh");
-        this.jLabel10.setText(arrPrice.get(1) + " đồng/kWh");
-        this.jLabel12.setText(arrPrice.get(2) + " đồng/kWh");
-        this.jLabel14.setText(arrPrice.get(3) + " đồng/kWh");
-        this.jLabel16.setText(arrPrice.get(4) + " đồng/kWh");
-        this.jLabel18.setText(arrPrice.get(5) + " đồng/kWh");
-        
-        this.jLabel20.setText(this.tax.getValue()+" %");
-        
-        this.jLabel21.setText(this.unit.getDes() + " - " + this.tax.getDes());
-        
-        this.jLabel23.setText(Calculate()+"");
-        this.jButton1.setEnabled(this.calculate.canchange);
+        try {
+            int st = 0;
+            int en = st + arrLevel.get(0);
+            this.jLabel7.setText("Cho kWh: " + st + " - " + en);
+            st = en;
+            en = st + arrLevel.get(1);
+            this.jLabel9.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            en = st + arrLevel.get(2);
+            this.jLabel11.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            en = st + arrLevel.get(3);
+            this.jLabel13.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            en = st + arrLevel.get(4);
+            this.jLabel15.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            //en = st + arrLevel.get(4);
+            this.jLabel17.setText("Cho kWh: " + (st+1) + " - " + "Trở lên");
+            
+            this.jLabel8.setText(arrPrice.get(0) + " đồng/kWh");
+            this.jLabel10.setText(arrPrice.get(1) + " đồng/kWh");
+            this.jLabel12.setText(arrPrice.get(2) + " đồng/kWh");
+            this.jLabel14.setText(arrPrice.get(3) + " đồng/kWh");
+            this.jLabel16.setText(arrPrice.get(4) + " đồng/kWh");
+            this.jLabel18.setText(arrPrice.get(5) + " đồng/kWh");
+            
+            this.jLabel20.setText(this.tax.getValue()+" %");
+            
+            this.jLabel21.setText(this.unit.getDes() + " - " + this.tax.getDes());
+            
+            this.jLabel23.setText(CalculateFnc.CalculatePrice(this.calculate.total, this.arrLevel, this.arrPrice, this.tax.getValue())+"");
+            this.jButton1.setEnabled(this.calculate.canchange);
+        } catch (Exception ex) {
+            Logger.getLogger(CalculatePrice.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public Double Calculate()
-    {
-        Double rs = 0.0;
-        int sd = this.calculate.total;
-        for (int i=0; i<this.arrLevel.size()-1; i++)
-        {
-            int level = this.arrLevel.get(i);
-            if (sd < 0)
-            {
-                break;
-            }
-            int tmp = Math.min(sd, level);
-            rs += tmp*this.arrPrice.get(i);
-            sd -= tmp;
-        }
-        if (sd > 0)
-        {
-            rs += sd*this.arrPrice.get(5);
-        }
-        return rs+(rs * this.tax.getValue()/100);
-    }
     
-    public ArrayList<Integer> stringToListInteger(String data)
-    {
-        ArrayList<Integer> rs = new ArrayList<>();
-        String[] spl = data.split("\\|");
-        for (int i=0; i<spl.length; i++)
-        {
-            String tmp = spl[i];
-            //System.out.println(tmp);
-            if(!"-".equals(tmp))
-            {
-                int sd = Integer.parseInt(tmp);
-                rs.add(sd);
-            }
-            else
-            {
-                rs.add((int) -1);
-            }
-        }
-        return rs;
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.
