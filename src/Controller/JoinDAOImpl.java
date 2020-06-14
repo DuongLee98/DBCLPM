@@ -83,6 +83,7 @@ public class JoinDAOImpl implements DAO{
                         rs.getInt("currentindex"),
                         rs.getInt("id")
                 });
+                
             }
         }    
         return arrObj;       

@@ -39,6 +39,18 @@ public class Payment extends javax.swing.JFrame {
         tax = tdi.getAvailableTax().getValue();
         jLabel21.setText(tax + "%");
         String[] units = udi.getAvailableUnit().getPrice().split("\\|");
+        String[] lvl = udi.getAvailableUnit().getLevel().split("\\|");
+        int[] level = new int[6];
+        level[0] = Integer.parseInt(lvl[0]);
+        level[1] = Integer.parseInt(lvl[1]);
+        level[2] = Integer.parseInt(lvl[2]);
+        level[3] = Integer.parseInt(lvl[3]);
+        level[4] = Integer.parseInt(lvl[4]);
+        level[5] = 10000;
+        String date = o[8].toString();
+        String onemonthago = KhanhOperating.toDate(date);
+        jLabel9.setText(date);
+        jLabel4.setText(onemonthago);
         double[] donGia = new double[6];
         dg1.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[0])));
         donGia[0] = Double.parseDouble(dg1.getText());
@@ -53,7 +65,7 @@ public class Payment extends javax.swing.JFrame {
         dg6.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[5])));
         donGia[5] = Double.parseDouble(dg6.getText());
         //System.out.println("fas: "+units[0]+" "+KhanhOperating.normalizeInt(Integer.parseInt(units[0])));
-        String date = o[8].toString();
+        
         jname.setText(o[1].toString() + " " + o[2].toString() + " " + o[3].toString());
         jadd.setText(o[4].toString() + ", " + o[5].toString());
         jcusid.setText(o[0].toString());
@@ -68,7 +80,7 @@ public class Payment extends javax.swing.JFrame {
         int tongDN = csm - csc1;
         this.tong.setText(KhanhOperating.normalizeInt(tongDN));
         int[] dntt = new int[6];
-        dntt = KhanhOperating.tinhDN(csc1, csm);
+        dntt = KhanhOperating.tinhDN(csc1, csm, level);
 
         
         tt1.setText(KhanhOperating.normalizeInt(dntt[0]));
@@ -689,7 +701,7 @@ public class Payment extends javax.swing.JFrame {
             Bill bill = new Bill();
             bill.setId(this.billId);
             bill.setPaymentStatus(true);
-            bdi.edit(bill);
+            bdi.editBill(bill);
             JOptionPane.showMessageDialog(rootPane, "Thanh toán thành công");
             this.setVisible(false);
             this.dispose();
