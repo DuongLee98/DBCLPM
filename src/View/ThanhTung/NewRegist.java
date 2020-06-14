@@ -25,6 +25,7 @@ public class NewRegist extends javax.swing.JFrame {
     ConnectToDB con = new ConnectToDB();
     Customer customer;
     public NewRegist(Customer customer) {
+        
         initComponents();
         this.customer = customer;
         if(customer != null){
@@ -32,6 +33,7 @@ public class NewRegist extends javax.swing.JFrame {
         }
         fillMesureBox();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
     
     public void fillFields(){

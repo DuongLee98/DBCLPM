@@ -28,6 +28,7 @@ public class Registed extends javax.swing.JFrame {
         tm = (DefaultTableModel)jTable1.getModel();
         fillTable();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
 
     /**

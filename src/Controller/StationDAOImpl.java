@@ -46,6 +46,7 @@ public class StationDAOImpl  implements DAO{
                 st.setAddressId(add);
                 st.setCompanyId(cp);
                 st.setId(id);
+                //System.out.println("List Measua");
                 st.setMesureArrayList(arrmeasure);
                 
                 rs.add(st);

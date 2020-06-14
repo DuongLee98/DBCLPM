@@ -23,12 +23,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author LeKhanh
  */
-public class CustomerList extends javax.swing.JFrame implements Runnable{
+public class CustomerList extends javax.swing.JFrame implements Runnable {
 
     /**
      * Creates new form Payment
      */
-    int pre =0, cur = 0;
+    int selRow = -1;
+    int pre = 0, cur = 0;
     public boolean lock = true;
     MeasureDAOImpl mdi;
     JoinDAOImpl jdi;
@@ -36,6 +37,7 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
     ArrayList<Object[]> arrObj;
     Connection con;
     String searchText;
+    int cusID;
     public CustomerList(Connection con) {
         System.out.println("Le Khanh new code");
         initComponents();
@@ -50,22 +52,20 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
 //        });
         Thread t = new Thread(this);
         t.start();
-        jTextField1.addKeyListener(new KeyAdapter()
-    {
-        public void keyPressed(KeyEvent ke)
-        {
-            if(!(ke.getKeyChar()==27||ke.getKeyChar()==65535))//this section will execute only when user is editing the JTextField
-            {
-                lock = false;
+        jTextField1.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (!(ke.getKeyChar() == 27 || ke.getKeyChar() == 65535))//this section will execute only when user is editing the JTextField
+                {
+                    lock = false;
+                }
+//            else {
+//                lock = true;
+//            }
             }
-            else {
-                lock = true;
-            }
-        }
-        
-        
-    });
+
+        });
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -119,6 +119,11 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
             }
         });
         jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
@@ -189,19 +194,19 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
 
     private void jTextField1InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextField1InputMethodTextChanged
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jTextField1InputMethodTextChanged
 
     private void jTextField1CaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextField1CaretPositionChanged
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jTextField1CaretPositionChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        int selRow = jTable1.getSelectedRow();
+        
         Object[] obj = null;
-        if(selRow>=0 && selRow<tb1.getRowCount()){
+        if (selRow >= 0 && selRow < tb1.getRowCount()) {
 //            obj = new Object[]{
 //                tb1.getValueAt(selRow, 0),
 //                tb1.getValueAt(selRow, 1),
@@ -213,9 +218,10 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
 //            };
 //            pre = (int) arrObj.get(selRow)[7];
 //            cur = (int) arrObj.get(selRow)[8];
-        new Payment(arrObj.get(selRow), this.con).setVisible(true);
+            new Payment(arrObj.get(selRow), this.con).setVisible(true);
+
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -231,7 +237,13 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        selRow = jTable1.getSelectedRow();
+        cusID = Integer.parseInt(tb1.getValueAt(selRow, 0).toString());
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -276,36 +288,49 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
-    
-    public void fillTable1(ArrayList<Object[]> obj){
+
+    public void fillTable1(ArrayList<Object[]> obj) {
         tb1.setRowCount(0);
-        if(obj.size() > 0){
-            for(int i = 0; i< obj.size(); i++){
-                tb1.addRow(new Object[]{null, null, null, null, null,null,null});
+        if (obj.size() > 0) {
+            for (int i = 0; i < obj.size(); i++) {
+                tb1.addRow(new Object[]{null, null, null, null, null, null, null});
                 tb1.setValueAt(obj.get(i)[0], i, 0);
-                tb1.setValueAt(obj.get(i)[1] +" "+ obj.get(i)[2]+" "+ obj.get(i)[3], i, 1);
-                tb1.setValueAt(obj.get(i)[4]+", "+obj.get(i)[5], i, 2);
+                tb1.setValueAt(obj.get(i)[1] + " " + obj.get(i)[2] + " " + obj.get(i)[3], i, 1);
+                tb1.setValueAt(obj.get(i)[4] + ", " + obj.get(i)[5], i, 2);
                 tb1.setValueAt(obj.get(i)[6], i, 3);
                 tb1.setValueAt(obj.get(i)[7], i, 4);
                 tb1.setValueAt(obj.get(i)[8], i, 5);
-                tb1.setValueAt(obj.get(i)[9], i, 6);
-               //tb1.addRow(obj.get(i));
+                tb1.setValueAt("Chưa đóng tiền", i, 6);
+                if (selRow != -1 && cusID ==  Integer.parseInt(obj.get(i)[0].toString())) {
+                            
+                            jTable1.setRowSelectionInterval(i, i);
+                        }
+                //tb1.addRow(obj.get(i));
             }
-            
+
         }
-        
+
     }
-    public boolean testAndSet(){
+
+    public boolean testAndSet() {
         boolean target = lock;
         lock = true;
         return target;
     }
+
     @Override
     public void run() {
-        while(true){
-            while(testAndSet()){
-                if(jTextField1.getText().trim().equals(""))
-                    tb1.setRowCount(0);
+        while (true) {
+            while (testAndSet()) {
+                try {
+                    if (jTextField1.getText().trim().equals("") || (this.jdi.searchByID(jTextField1.getText()).size() == 0)) {
+                        tb1.setRowCount(0);
+                    } else {
+                        lock = false;
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(CustomerList.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
@@ -313,22 +338,21 @@ public class CustomerList extends javax.swing.JFrame implements Runnable{
                 }
             }
             searchText = jTextField1.getText();
-            System.out.println(searchText);
-            if(!searchText.equals("")){
+            if (!searchText.equals("")) {
                 try {
                     arrObj = this.jdi.searchByID(searchText);
-                    
-                    if(arrObj.size()>0){
+
+                    if (arrObj.size() > 0) {
                         fillTable1(arrObj);
-                    }
-                    else {
+                        
+                    } else {
                         tb1.setRowCount(0);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(CustomerList.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {

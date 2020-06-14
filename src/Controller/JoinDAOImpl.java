@@ -52,7 +52,7 @@ public class JoinDAOImpl implements DAO{
                             + "FROM regist, person , fullname, address, customer, "
                             + "bill, mesure "
                             + "WHERE person.id = customer.personid "
-                            + "and bill.mesureid = mesure.id "
+                            + "and bill.mesure = mesure.id "
                             + "and mesure.id = regist.mesureid "
                             + "and person.fullnameid = fullname.id "
                             + "and person.addressid = address.id "
@@ -61,7 +61,7 @@ public class JoinDAOImpl implements DAO{
                             + "and (person.phone like ? "
                             + "or concat(fullname.lastname,\" \", fullname.middlename ,\" \", "
                             + "fullname.firstname) like ? "
-                            + "or bill.mesureid = ?) "
+                            + "or bill.mesure = ?) "
                             + "and (bill.paymentstatus = 0)");
             prstm.setString(1, search);
             prstm.setString(2, search);
@@ -85,7 +85,6 @@ public class JoinDAOImpl implements DAO{
                 });
             }
         }    
-        System.out.println(arrObj.size());
         return arrObj;       
     }
     
