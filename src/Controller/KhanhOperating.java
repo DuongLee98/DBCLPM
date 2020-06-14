@@ -9,17 +9,21 @@ package Controller;
  *
  * @author kl
  */
-public class KhanhOperating
-{
+public class KhanhOperating {
 
     public static String normalize(String s) {
         String ret = "";
         if (s.length() >= 5) {
             String[] so = s.split("\\.");
             int n = so[0].length() % 3 + 1;
-
+            if(so[1].length() == 1){
+                so[1] += "00";
+            }
+            if(so[1].length() == 2){
+                so[1] += "0";
+            }
             ret += so[1];
-
+            
             int index = so[0].length() - 1;
             while (index >= 0 && n > 0) {
                 String tmp = "";
@@ -215,15 +219,22 @@ public class KhanhOperating
             }
             res += "đồng";
         }
+        if (res.startsWith("không trăm")) {
+            res = res.substring(11);
+            if (res.startsWith("linh")) {
+                res = res.substring(5);
+            }
+        }
         res = res.replaceAll("không đồng", "đồng");
         res = res.replaceAll("không nghìn", "nghìn");
         res = res.replaceAll("không trăm linh", "");
         res = res.replaceAll("linh lăm", "linh năm");
         res = res.replaceAll("linh không", "");
         res = res.replaceAll("linh nghìn", "nghìn");
-        res = res.replaceAll("lăm nghìn", "năm nghìn");
+        res = res.replaceAll("linh lăm nghìn", "linh năm nghìn");
         res = res.replaceAll("lăm triệu", "năm triệu");
-        return res;
+        
+        return res.trim();
     }
 
     public static String normalizeInt(int s) {
@@ -245,28 +256,62 @@ public class KhanhOperating
         return res;
     }
 
-    public static int[] tinhDN(int dn) {
-        int res[] = {50, 50, 100, 100, 100, 10000};
-        boolean isGreater = true;
-        for (int i = 0; i < 6; i++) {
-            if (isGreater) {
+    
+    public static int[] tinhDN(int csc, int csm) {
+        if (csc >= 0 && csm >= 0 && csm >= csc) {
+            int dn = csm - csc;
+            int res[] = {50, 50, 100, 100, 100, 10000};
+            
+            boolean isGreater = true;
+            for (int i = 0; i < 6; i++) {
+                if (isGreater) {
 
-                if (dn - res[i] > 0) {
-                    dn = dn - res[i];
+                    if (dn - res[i] > 0) {
+                        dn = dn - res[i];
+                    } else {
+                        res[i] = dn;
+                        isGreater = false;
+                    }
                 } else {
-                    res[i] = dn;
-                    isGreater = false;
-                }
-            } else {
 
-                int index = i;
-                while (index <= 5) {
-                    res[index] = 0;
-                    index++;
-                }
+                    int index = i;
+                    while (index <= 5) {
+                        res[index] = 0;
+                        index++;
+                    }
 
-                break;
+                    break;
+                }
             }
+            return res;
+        }
+        else{
+            int r[] = {0, 0, 0, 0, 0, 0};
+            return r;
+        }
+    }
+    
+    public static double tinhThue(double p, double tax){
+        return Double.parseDouble(String.format("%.03f", p*(tax/100)));
+    }
+    
+    public static double tinhTong(double a, double b){
+        return Double.parseDouble(String.format("%.03f", a+b));
+    }
+    
+    public static double[] thanhTien (double[] donGia, int[] dntt){
+        
+        double[] res = new double[6];
+        for(int i=0; i<6; i++){
+            res[i] = donGia[i]*dntt[i];
+        }
+        return res;
+    }
+    
+    public static double tongThanhTien(double[] thanhtien){
+        double res = 0;
+        for(int i = 0; i<thanhtien.length; i++){
+            res += thanhtien[i];
         }
         return res;
     }
