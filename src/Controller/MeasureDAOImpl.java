@@ -108,6 +108,9 @@ public class MeasureDAOImpl  implements DAO{
                 
                 RegistDAOImpl rdao = new RegistDAOImpl(connection);
                 m.setRegistId(rdao.getRegistByMesureId(id));
+                BillDAOImpl billdao = new BillDAOImpl(connection);
+                //System.out.println("mesure query");
+                m.setBillArrayList(billdao.getBillByIdMesua(m.getId()));
                 
                 listMesure.add(m);
                 
