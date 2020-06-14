@@ -34,7 +34,7 @@ public class StationDAOImpl  implements DAO{
                 int addressId = rss.getInt("AddressId");
                 
                 AddressDAOImpl adiml = new AddressDAOImpl(connection);
-                Address add = adiml.getAddress(addressId);
+                Address add = adiml.searchByID(addressId);
                 
                 CompanyDAOImpl cdiml = new CompanyDAOImpl(connection);
                 Company cp = cdiml.searchByID(companyId);
@@ -74,7 +74,36 @@ public class StationDAOImpl  implements DAO{
 
     @Override
     public Station searchByID(int id) {
-        return null;
+        Station rs = new Station();
+        try {
+            
+            String sql = "SELECT * FROM station WHERE id = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rss = ps.executeQuery();
+            if(rss.next())
+            {
+
+                int idt = rss.getInt("Id");
+                int companyid = rss.getInt("CompanyId");
+                int addressid = rss.getInt("AddressId");
+                
+                AddressDAOImpl adiml = new AddressDAOImpl(connection);
+                Address add = adiml.searchByID(addressid);
+                
+                CompanyDAOImpl cdaoi = new CompanyDAOImpl(connection);
+                Company company = cdaoi.searchByID(companyid);
+                
+                rs.setId(id);
+                rs.setAddressId(add);
+                rs.setCompanyId(company);
+             
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CompanyDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rs;
     }
     
 }

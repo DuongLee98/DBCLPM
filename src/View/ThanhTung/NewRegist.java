@@ -166,18 +166,11 @@ public class NewRegist extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextLastname.setText("Tran");
         jTextLastname.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextLastnameActionPerformed(evt);
             }
         });
-
-        jTextMiddlename.setText("Phuong");
-
-        jTextFirstname.setText("Thao");
-
-        jTextPhone.setText("0987611");
 
         jLabel1.setText("Last Name");
 
@@ -191,17 +184,9 @@ public class NewRegist extends javax.swing.JFrame {
 
         jLabel6.setText("Number");
 
-        jTextStreet.setText("Thinh Hao");
-
-        jTextNumber.setText("42");
-
         jLabel7.setText("Birthday");
 
-        jTextBirthday.setText("13-06-1999");
-
         jLabel8.setText("Join date");
-
-        jTextJoindate.setText("27-02-2020");
 
         btnDangKy.setText("Đăng ký");
         btnDangKy.addActionListener(new java.awt.event.ActionListener() {
@@ -285,6 +270,10 @@ public class NewRegist extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDangKyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangKyActionPerformed
+        regist();
+    }//GEN-LAST:event_btnDangKyActionPerformed
+    
+    public void regist(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");  
         LocalDateTime now = LocalDateTime.now();  
         String date = now.format(dtf);
@@ -293,20 +282,27 @@ public class NewRegist extends javax.swing.JFrame {
         Mesure mesure = measureDAOImpl.searchByID(measureId);
         if(customer != null){
             getExistedCustomerInfor();
+            Regist regist = new Regist();
+            regist.setMesureId(mesure);
+            regist.setCustomerPersonId(customer);
+            regist.setTime(date);
+            CustomerDAOImpl customerDAOImpl = new CustomerDAOImpl(con.getCon());
+            int  checkAddCustomer = customerDAOImpl.updateCustomer(customer);
+            RegistDAOImpl registDAOImpl = new RegistDAOImpl(con.getCon());
+            int checkAddRegist = registDAOImpl.addRegist(regist);
         }
         else{
             getNewCustomerInfor();
+            Regist regist = new Regist();
+            regist.setMesureId(mesure);
+            regist.setCustomerPersonId(customer);
+            regist.setTime(date);
+            CustomerDAOImpl customerDAOImpl = new CustomerDAOImpl(con.getCon());
+            int  checkAddCustomer = customerDAOImpl.addCustomer(customer);
+            RegistDAOImpl registDAOImpl = new RegistDAOImpl(con.getCon());
+            int checkAddRegist = registDAOImpl.addRegist(regist);
         }
-        Regist regist = new Regist();
-        regist.setMesureId(mesure);
-        regist.setCustomerPersonId(customer);
-        regist.setTime(date);
-        CustomerDAOImpl customerDAOImpl = new CustomerDAOImpl(con.getCon());
-        int  checkAddCustomer = customerDAOImpl.updateCustomer(customer);
-        RegistDAOImpl registDAOImpl = new RegistDAOImpl(con.getCon());
-        int checkAddRegist = registDAOImpl.addRegist(regist);
-    }//GEN-LAST:event_btnDangKyActionPerformed
-
+    }
     private void jTextLastnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextLastnameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextLastnameActionPerformed

@@ -74,7 +74,7 @@ public class FullNameDAOImpl  implements DAO{
         return fullname;
     }
     
-    public int addFullname(Fullname fullname){
+    public boolean addFullname(Fullname fullname){
         String sql = "INSERT INTO Fullname(Lastname, Middlename, Firstname) VALUES(?, ?, ?)";
         try{
             PreparedStatement ps = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
@@ -84,12 +84,12 @@ public class FullNameDAOImpl  implements DAO{
             ps.executeUpdate();
             ResultSet rs=ps.getGeneratedKeys();
             if (rs.next()){
-                return rs.getInt(1);
+                return true;
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return false;
     }
     
     public Fullname getLastInsert(){
@@ -135,7 +135,7 @@ public class FullNameDAOImpl  implements DAO{
         return listFullname;
     }
     
-    public int updateFullname(Fullname fullname){
+    public boolean updateFullname(Fullname fullname){
         String sql = "UPDATE Fullname SET Lastname = ?, Middlename = ?, Firstname = ? WHERE Id = ?";
         try{
             PreparedStatement ps = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
@@ -145,13 +145,13 @@ public class FullNameDAOImpl  implements DAO{
             ps.setInt(4, fullname.getId());
             ps.executeUpdate();
             ResultSet rs=ps.getGeneratedKeys();
-            if (rs.next()){
-                return rs.getInt(1);
+            if (ps.executeUpdate() == 0){
+                return false;
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return true;
     }
     
     public Fullname getFullName (int id) {
