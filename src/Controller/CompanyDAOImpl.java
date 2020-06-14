@@ -57,7 +57,7 @@ public class CompanyDAOImpl implements DAO{
                 int phone = rss.getInt("phone");
                 
                 AddressDAOImpl adiml = new AddressDAOImpl(connection);
-                Address add = adiml.getAddress(addressid);
+                Address add = adiml.searchByID(addressid);
                 
                 rs.setId(id);
                 rs.setAddressId(add);

@@ -341,7 +341,7 @@ public class CustomerList extends javax.swing.JFrame implements Runnable {
             if (!searchText.equals("")) {
                 try {
                     arrObj = this.jdi.searchByID(searchText);
-
+                    System.out.println(arrObj.get(0)[1]);
                     if (arrObj.size() > 0) {
                         fillTable1(arrObj);
                         

@@ -257,10 +257,10 @@ public class KhanhOperating {
     }
 
     
-    public static int[] tinhDN(int csc, int csm) {
+    public static int[] tinhDN(int csc, int csm, int[] res) {
         if (csc >= 0 && csm >= 0 && csm >= csc) {
             int dn = csm - csc;
-            int res[] = {50, 50, 100, 100, 100, 10000};
+//            int res[] = {50, 50, 100, 100, 100, 10000};
             
             boolean isGreater = true;
             for (int i = 0; i < 6; i++) {
@@ -291,6 +291,26 @@ public class KhanhOperating {
         }
     }
     
+    public static String toDate(String date){
+        String [] d = date.split("-");
+        int month;
+        String s = "";
+        if (d[1].charAt(0) == '0'){
+            s += d[1].charAt(1);
+            month = Integer.parseInt(s);
+        }
+        else month = Integer.parseInt(d[1]);
+        if(month >=2 && month<=12){
+            month = month-1;
+        }
+        else if(month==1){
+            month = 12;
+            d[2] = (Integer.parseInt(d[2])-1)+"";
+        }
+        d[1] = month+"";
+        return d[0]+"-"+d[1]+"-"+d[2];
+    }
+    
     public static double tinhThue(double p, double tax){
         return Double.parseDouble(String.format("%.03f", p*(tax/100)));
     }
@@ -314,5 +334,9 @@ public class KhanhOperating {
             res += thanhtien[i];
         }
         return res;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(toDate("12-01-2019"));
     }
 }
