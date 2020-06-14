@@ -6,6 +6,7 @@
 package View.LeKhanh;
 
 import Controller.BillDAOImpl;
+import Controller.KhanhOperating;
 import Controller.TaxDAOImpl;
 import Controller.UnitDAOImpl;
 import java.sql.*;
@@ -29,23 +30,30 @@ public class Payment extends javax.swing.JFrame {
     Connection con;
     int billId;
     double tax;
+
     public Payment(Object[] o, Connection con) {
         initComponents();
         this.con = con;
         udi = new UnitDAOImpl(this.con);
         tdi = new TaxDAOImpl(this.con);
         tax = tdi.getAvailableTax().getValue();
-        jLabel21.setText(tax+"%");
+        jLabel21.setText(tax + "%");
         String[] units = udi.getAvailableUnit().getPrice().split("\\|");
-
-        dg1.setText(normalizeInt(Integer.parseInt(units[0])));
-        dg2.setText(normalizeInt(Integer.parseInt(units[1])));
-        dg3.setText(normalizeInt(Integer.parseInt(units[2])));
-        dg4.setText(normalizeInt(Integer.parseInt(units[3])));
-        dg5.setText(normalizeInt(Integer.parseInt(units[4])));
-        dg6.setText(normalizeInt(Integer.parseInt(units[5])));
-        //System.out.println("fas: "+units[0]+" "+normalizeInt(Integer.parseInt(units[0])));
-
+        double[] donGia = new double[6];
+        dg1.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[0])));
+        donGia[0] = Double.parseDouble(dg1.getText());
+        dg2.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[1])));
+        donGia[1] = Double.parseDouble(dg2.getText());
+        dg3.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[2])));
+        donGia[2] = Double.parseDouble(dg3.getText());
+        dg4.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[3])));
+        donGia[3] = Double.parseDouble(dg4.getText());
+        dg5.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[4])));
+        donGia[4] = Double.parseDouble(dg5.getText());
+        dg6.setText(KhanhOperating.normalizeInt(Integer.parseInt(units[5])));
+        donGia[5] = Double.parseDouble(dg6.getText());
+        //System.out.println("fas: "+units[0]+" "+KhanhOperating.normalizeInt(Integer.parseInt(units[0])));
+        String date = o[8].toString();
         jname.setText(o[1].toString() + " " + o[2].toString() + " " + o[3].toString());
         jadd.setText(o[4].toString() + ", " + o[5].toString());
         jcusid.setText(o[0].toString());
@@ -55,84 +63,84 @@ public class Payment extends javax.swing.JFrame {
         jBillId.setText(billId + "");
         int csc1 = (int) o[10];
         int csm = (int) o[11];
-        this.csc1.setText(normalizeInt(csc1));
-        this.csm.setText(normalizeInt(csm));
+        this.csc1.setText(KhanhOperating.normalizeInt(csc1));
+        this.csm.setText(KhanhOperating.normalizeInt(csm));
         int tongDN = csm - csc1;
-        this.tong.setText(normalizeInt(tongDN));
+        this.tong.setText(KhanhOperating.normalizeInt(tongDN));
         int[] dntt = new int[6];
-        dntt = tinhDN(tongDN);
+        dntt = KhanhOperating.tinhDN(csc1, csm);
 
-        tt1.setText(normalizeInt(dntt[0]));
-        tt2.setText(normalizeInt(dntt[1]));
-        tt3.setText(normalizeInt(dntt[2]));
-        tt4.setText(normalizeInt(dntt[3]));
-        tt5.setText(normalizeInt(dntt[4]));
-        tt6.setText(normalizeInt(dntt[5]));
-        double thanhtien1 = Double.parseDouble(dntt[0] * Double.parseDouble(dg1.getText()) + "");
-        double thanhtien2 = Double.parseDouble(dntt[1] * Double.parseDouble(dg2.getText()) + "");
-        double thanhtien3 = Double.parseDouble(dntt[2] * Double.parseDouble(dg3.getText()) + "");
-        double thanhtien4 = Double.parseDouble(dntt[3] * Double.parseDouble(dg4.getText()) + "");
-        double thanhtien5 = Double.parseDouble(dntt[4] * Double.parseDouble(dg5.getText()) + "");
-        double thanhtien6 = Double.parseDouble(dntt[5] * Double.parseDouble(dg6.getText()) + "");
-        if (thanhtien1 != 0) {
-            tien1.setText(String.format("%.03f", thanhtien1));
+        
+        tt1.setText(KhanhOperating.normalizeInt(dntt[0]));
+        tt2.setText(KhanhOperating.normalizeInt(dntt[1]));
+        tt3.setText(KhanhOperating.normalizeInt(dntt[2]));
+        tt4.setText(KhanhOperating.normalizeInt(dntt[3]));
+        tt5.setText(KhanhOperating.normalizeInt(dntt[4]));
+        tt6.setText(KhanhOperating.normalizeInt(dntt[5]));
+        double[] thanhtien = KhanhOperating.thanhTien(donGia, dntt);
+//        double thanhtien1 = Double.parseDouble(dntt[0] * Double.parseDouble(dg1.getText()) + "");
+//        double thanhtien2 = Double.parseDouble(dntt[1] * Double.parseDouble(dg2.getText()) + "");
+//        double thanhtien3 = Double.parseDouble(dntt[2] * Double.parseDouble(dg3.getText()) + "");
+//        double thanhtien4 = Double.parseDouble(dntt[3] * Double.parseDouble(dg4.getText()) + "");
+//        double thanhtien5 = Double.parseDouble(dntt[4] * Double.parseDouble(dg5.getText()) + "");
+//        double thanhtien6 = Double.parseDouble(dntt[5] * Double.parseDouble(dg6.getText()) + "");
+        if (thanhtien[0] != 0) {
+            tien1.setText(String.format("%.03f", thanhtien[0]));
         } else {
             tien1.setText("0");
         }
-        if (thanhtien2 != 0) {
-            tien2.setText(String.format("%.03f", thanhtien2));
+        if (thanhtien[1] != 0) {
+            tien2.setText(String.format("%.03f", thanhtien[1]));
         } else {
             tien2.setText("0");
         }
-        if (thanhtien3 != 0) {
-            tien3.setText(String.format("%.03f", thanhtien3));
+        if (thanhtien[2] != 0) {
+            tien3.setText(String.format("%.03f", thanhtien[2]));
         } else {
             tien3.setText("0");
         }
-        if (thanhtien4 != 0) {
-            tien4.setText(String.format("%.03f", thanhtien4));
+        if (thanhtien[3] != 0) {
+            tien4.setText(String.format("%.03f", thanhtien[3]));
         } else {
             tien4.setText("0");
         }
-        if (thanhtien5 != 0) {
-            tien5.setText(String.format("%.03f", thanhtien5));
+        if (thanhtien[4] != 0) {
+            tien5.setText(String.format("%.03f", thanhtien[4]));
         } else {
             tien5.setText("0");
         }
-        if (thanhtien6 != 0) {
-            tien6.setText(String.format("%.03f", thanhtien6));
+        if (thanhtien[5] != 0) {
+            tien6.setText(String.format("%.03f", thanhtien[6]));
         } else {
             tien6.setText("0");
         }
-//        tien1.setText(String.format("%.03f", thanhtien1));
-//        tien2.setText(String.format("%.03f", thanhtien2));
-//        tien3.setText(String.format("%.03f", thanhtien3));
-//        tien4.setText(String.format("%.03f", thanhtien4));
-//        tien5.setText(String.format("%.03f", thanhtien5));
-//        tien6.setText(String.format("%.03f", thanhtien6));
-        tongtt.setText(normalizeInt(tongDN));
+        
+        tongtt.setText(KhanhOperating.normalizeInt(tongDN));
 
-        double tongThanhTien = thanhtien1
-                + thanhtien2
-                + thanhtien3
-                + thanhtien4
-                + thanhtien5
-                + thanhtien6;
+        double tongThanhTien = KhanhOperating.tongThanhTien(thanhtien);
+        if (tongThanhTien != 0) {
+            tongthanhtien.setText(KhanhOperating.normalize(String.format("%.03f", tongThanhTien)));
+            double thue = KhanhOperating.tinhThue(tongThanhTien, tax);
 
-        tongthanhtien.setText(normalize(String.format("%.03f", tongThanhTien)));
-        double thue = tongThanhTien * (tax/100);
+            thue1.setText(KhanhOperating.normalize(thue+""));
 
-        thue1.setText(normalize(String.format("%.03f", thue)));
+            tongcong.setText(KhanhOperating.normalize(KhanhOperating.tinhTong(tongThanhTien, thue)+""));
+            bangchu.setText(KhanhOperating.toWord(tongcong.getText().split("\\.")));
+        }
+        else {
+            tongthanhtien.setText("0");
+            thue1.setText("0");
 
-        tongcong.setText(normalize(String.format("%.03f", (tongThanhTien + tongThanhTien * (tax/100)))));
-        bangchu.setText(toWord(tongcong.getText().split("\\.")));
-        tien1.setText(normalize(tien1.getText()));
-        tien2.setText(normalize(tien2.getText()));
-        tien3.setText(normalize(tien3.getText()));
-        tien4.setText(normalize(tien4.getText()));
-        tien5.setText(normalize(tien5.getText()));
-        tien6.setText(normalize(tien6.getText()));
-//        tongthanhtien.setText(normalize(tongthanhtien.getText()));
+            tongcong.setText("0");
+            bangchu.setText("0");
+        }
+        tien1.setText(KhanhOperating.normalize(tien1.getText()));
+        tien2.setText(KhanhOperating.normalize(tien2.getText()));
+        tien3.setText(KhanhOperating.normalize(tien3.getText()));
+        tien4.setText(KhanhOperating.normalize(tien4.getText()));
+        tien5.setText(KhanhOperating.normalize(tien5.getText()));
+        tien6.setText(KhanhOperating.normalize(tien6.getText()));
+//        tongthanhtien.setText(KhanhOperating.normalize(tongthanhtien.getText()));
 //        String x = thue1.getText();
 //        System.out.println(x);
 //        if(x.contains(".") && x.length() == 5){
@@ -163,9 +171,9 @@ public class Payment extends javax.swing.JFrame {
         jadd = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jphone = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        fromDate = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        toDate = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -242,11 +250,11 @@ public class Payment extends javax.swing.JFrame {
 
         jphone.setText("123456789");
 
-        jLabel2.setText("Sử dụng từ:");
+        fromDate.setText("Sử dụng từ:");
 
         jLabel4.setText("12-09-2019");
 
-        jLabel7.setText("đến:");
+        toDate.setText("đến:");
 
         jLabel9.setText("12-10-2019");
 
@@ -443,8 +451,8 @@ public class Payment extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel2)))
+                                .addComponent(toDate)
+                                .addComponent(fromDate)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jmeasid)
@@ -569,13 +577,13 @@ public class Payment extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jadd)
-                    .addComponent(jLabel2)
+                    .addComponent(fromDate)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jphone)
-                    .addComponent(jLabel7)
+                    .addComponent(toDate)
                     .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -604,15 +612,17 @@ public class Payment extends javax.swing.JFrame {
                     .addComponent(dg1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tien1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tt2)
-                    .addComponent(dg2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tien2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tien2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tt2)
+                        .addComponent(dg2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tt3)
-                    .addComponent(dg3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tien3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tien3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tt3)
+                        .addComponent(dg3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -620,10 +630,11 @@ public class Payment extends javax.swing.JFrame {
                             .addComponent(tt4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(dg4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tt5)
-                            .addComponent(dg5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tien5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tien5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tt5)
+                                .addComponent(dg5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(tien4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -721,262 +732,7 @@ public class Payment extends javax.swing.JFrame {
 //            }
 //        });
 //    }
-    public String normalizeInt(int s) {
-        String res = "";
-        String x = s + "";
-        int count = 0;
-        for (int i = x.length() - 1; i >= 0; i--) {
-            if (count < 2) {
-                res = x.charAt(i) + res;
-                count++;
-            } else {
-                res = "." + x.charAt(i) + res;
-                count = 0;
-            }
-        }
-        if (res.contains(".") && res.length() == 4) {
-            res = res.substring(1);
-        }
-        return res;
-    }
 
-    public int[] tinhDN(int dn) {
-        int res[] = {50, 50, 100, 100, 100, 10000};
-        boolean isGreater = true;
-        for (int i = 0; i < 6; i++) {
-            if (isGreater) {
-
-                if (dn - res[i] > 0) {
-                    dn = dn - res[i];
-                } else {
-                    res[i] = dn;
-                    isGreater = false;
-                }
-            } else {
-
-                int index = i;
-                while (index <= 5) {
-                    res[index] = 0;
-                    index++;
-                }
-
-                break;
-            }
-        }
-        return res;
-    }
-
-    String normalize(String s) {
-        String ret = "";
-        if (s.length() >= 5) {
-            String[] so = s.split("\\.");
-            int n = so[0].length() % 3 + 1;
-
-            ret += so[1];
-
-            int index = so[0].length() - 1;
-            while (index >= 0 && n > 0) {
-                String tmp = "";
-                for (int i = 0; i < 3; i++) {
-                    if (index >= i) {
-                        tmp = so[0].charAt(index - i) + tmp;
-                    } else {
-                        break;
-                    }
-                }
-                ret = tmp + "." + ret;
-
-                index -= 3;
-            }
-            return ret;
-        }
-        else return s;
-    }
-
-    String numToWord(char s, int ind) {
-        switch (s) {
-            case '1':
-                if (ind == 0) {
-                    return "một trăm";
-                } else if (ind == 1) {
-                    return "mười";
-                } else {
-                    return "một";
-                }
-
-            case '2':
-                if (ind == 0) {
-                    return "hai trăm";
-                } else if (ind == 1) {
-                    return "hai mươi";
-                } else {
-                    return "hai";
-                }
-            case '3':
-                if (ind == 0) {
-                    return "ba trăm";
-                } else if (ind == 1) {
-                    return "ba mươi";
-                } else {
-                    return "ba";
-                }
-            case '4':
-                if (ind == 0) {
-                    return "bốn trăm";
-                } else if (ind == 1) {
-                    return "bốn mươi";
-                } else {
-                    return "bốn";
-                }
-            case '5':
-                if (ind == 0) {
-                    return "năm trăm";
-                } else if (ind == 1) {
-                    return "năm mươi";
-                } else {
-                    return "lăm";
-                }
-            case '6':
-                if (ind == 0) {
-                    return "sáu trăm";
-                } else if (ind == 1) {
-                    return "sáu mươi";
-                } else {
-                    return "sáu";
-                }
-            case '7':
-                if (ind == 0) {
-                    return "bảy trăm";
-                } else if (ind == 1) {
-                    return "bảy mươi";
-                } else {
-                    return "bảy";
-                }
-            case '8':
-                if (ind == 0) {
-                    return "tám trăm";
-                } else if (ind == 1) {
-                    return "tám mươi";
-                } else {
-                    return "tám";
-                }
-            case '9':
-                if (ind == 0) {
-                    return "chín trăm";
-                } else if (ind == 1) {
-                    return "chín mươi";
-                } else {
-                    return "chín";
-                }
-            case '0':
-                if (ind == 0) {
-                    return "không trăm";
-                } else if (ind == 1) {
-                    return "linh";
-                } else {
-                    return "không";
-                }
-        }
-        return null;
-    }
-
-    String toWord(String s[]) {
-        int n = s.length;
-        String res = "";
-
-        if (n == 2) {
-            if (s[0].length() == 1) {
-                s[0] = "00" + s[0];
-
-            } else if (s[0].length() == 2) {
-                s[0] = "0" + s[0];
-
-            }
-
-            for (int i = 0; i < 3; i++) {
-
-                String r = numToWord(s[0].charAt(i), i);
-
-                res += r + " ";
-
-            }
-            res += "nghìn ";
-
-            if (s[1].length() == 1) {
-                s[1] = "00" + s[1];
-
-            } else if (s[1].length() == 2) {
-                s[1] = "0" + s[1];
-
-            }
-            for (int i = 0; i < 3; i++) {
-
-                String r = numToWord(s[1].charAt(i), i);
-
-                res += r + " ";
-
-            }
-            res += "đồng";
-
-        } else if (n == 3) {
-            if (s[0].length() == 1) {
-                s[0] = "00" + s[0];
-
-            } else if (s[0].length() == 2) {
-                s[0] = "0" + s[0];
-
-            }
-
-            for (int i = 0; i < 3; i++) {
-
-                String r = numToWord(s[0].charAt(i), i);
-
-                res += r + " ";
-
-            }
-            res += "triệu ";
-
-            if (s[1].length() == 1) {
-                s[1] = "00" + s[1];
-
-            } else if (s[1].length() == 2) {
-                s[1] = "0" + s[1];
-
-            }
-            for (int i = 0; i < 3; i++) {
-
-                String r = numToWord(s[1].charAt(i), i);
-
-                res += r + " ";
-
-            }
-            res += "nghìn ";
-            if (s[2].length() == 1) {
-                s[2] = "00" + s[2];
-
-            } else if (s[2].length() == 2) {
-                s[2] = "0" + s[2];
-
-            }
-            for (int i = 0; i < 3; i++) {
-
-                String r = numToWord(s[2].charAt(i), i);
-
-                res += r + " ";
-
-            }
-            res += "đồng";
-        }
-        res = res.replaceFirst("không đồng", "đồng");
-        res = res.replaceFirst("không nghìn", "nghìn");
-        res = res.replaceFirst("không trăm linh", "");
-
-        res = res.replaceFirst("linh không", "");
-        res = res.replaceFirst("linh nghìn", "nghìn");
-        res = res.replaceFirst("lăm nghìn", "năm nghìn");
-        res = res.replaceFirst("lăm triệu", "năm triệu");
-        return res;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bangchu;
     private javax.swing.JLabel csc1;
@@ -987,6 +743,7 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel dg4;
     private javax.swing.JLabel dg5;
     private javax.swing.JLabel dg6;
+    private javax.swing.JLabel fromDate;
     private javax.swing.JLabel jBillId;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -1000,7 +757,6 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel23;
@@ -1009,7 +765,6 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
@@ -1028,6 +783,7 @@ public class Payment extends javax.swing.JFrame {
     private javax.swing.JLabel tien4;
     private javax.swing.JLabel tien5;
     private javax.swing.JLabel tien6;
+    private javax.swing.JLabel toDate;
     private javax.swing.JLabel tong;
     private javax.swing.JLabel tongcong;
     private javax.swing.JLabel tongthanhtien;
