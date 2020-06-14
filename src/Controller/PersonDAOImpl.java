@@ -27,7 +27,7 @@ public class PersonDAOImpl implements DAO{
         
     }
     
-    public int addPerson(Person person){ 
+    public boolean addPerson(Person person){ 
         String sql="INSERT INTO Person(FullnameId, AddressId, Phone, Dob) VALUES(?, ?, ?, ?)";
         try{
             PreparedStatement ps = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
@@ -38,12 +38,12 @@ public class PersonDAOImpl implements DAO{
             ps.executeUpdate();
             ResultSet rs=ps.getGeneratedKeys();
             if (rs.next()){
-                return rs.getInt(1);
+                return true;
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return false;
     }
 
     @Override

@@ -126,16 +126,19 @@ public class Registed extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNewRegistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewRegistActionPerformed
+        
+        NewRegist newRegist = new NewRegist(searchCustomer());
+        newRegist.setVisible(true);
+    }//GEN-LAST:event_btnNewRegistActionPerformed
+    public Customer searchCustomer(){
         int row = jTable1.getSelectedRow();
         CustomerDAOImpl customerDAOImpl = new CustomerDAOImpl(connectToDB.getCon());
         Customer customer = null;
         if(row >= 0){
             customer = customerDAOImpl.searchByID(Integer.parseInt(jTable1.getValueAt(row, 0).toString()));
         }
-        NewRegist newRegist = new NewRegist(customer);
-        newRegist.setVisible(true);
-    }//GEN-LAST:event_btnNewRegistActionPerformed
-
+        return customer;
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         fillTable();
     }//GEN-LAST:event_jButton1ActionPerformed

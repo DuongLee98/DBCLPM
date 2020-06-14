@@ -5,6 +5,9 @@
  */
 package Controller;
 
+import Database.ConnectToDB;
+import Models.Address;
+import Models.Company;
 import Models.Station;
 import java.util.ArrayList;
 import org.junit.After;
@@ -19,7 +22,7 @@ import static org.junit.Assert.*;
  * @author TungMg
  */
 public class StationDAOImplTest {
-    
+    ConnectToDB con = new ConnectToDB();
     public StationDAOImplTest() {
     }
     
@@ -45,64 +48,90 @@ public class StationDAOImplTest {
     @Test
     public void testGetAll() {
         System.out.println("getAll");
-        StationDAOImpl instance = null;
-        ArrayList<Station> expResult = null;
+        StationDAOImpl instance = new StationDAOImpl(con.getCon());
+        ArrayList<Station> expResult = new ArrayList<>();
+        
+        Address addCom = new Address();
+        addCom.setId(6);
+        addCom.setNumber(24);
+        addCom.setStreet("Cho Van Chuong");
+        
+        Company company = new Company();
+        company.setId(1);
+        company.setAddressId(addCom);
+        company.setName("Cong ty dien luc Ha Noi");
+        company.setPhone(987654);
+                
+        Address addSta = new Address();
+        addSta.setId(7);
+        addSta.setNumber(90);
+        addSta.setStreet("Cho Van Chuong");
+        
+        Station station = new Station();
+        station.setId(1);
+        station.setCompanyId(company);
+        station.setAddressId(addSta);
+        
+        expResult.add(station);
         ArrayList<Station> result = instance.getAll();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        for(int i = 0; i < result.size(); i++){
+            assertEquals(expResult.get(i).getId(), result.get(i).getId());
+            assertEquals(expResult.get(i).getCompanyId().getId(), result.get(i).getCompanyId().getId());
+            assertEquals(expResult.get(i).getAddressId().getId(), result.get(i).getAddressId().getId());
+        }
+        
     }
 
     /**
      * Test of add method, of class StationDAOImpl.
      */
-    @Test
-    public void testAdd() {
-        System.out.println("add");
-        StationDAOImpl instance = null;
-        instance.add();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of edit method, of class StationDAOImpl.
-     */
-    @Test
-    public void testEdit() {
-        System.out.println("edit");
-        Object t = null;
-        StationDAOImpl instance = null;
-        instance.edit(t);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of delete method, of class StationDAOImpl.
-     */
-    @Test
-    public void testDelete() {
-        System.out.println("delete");
-        StationDAOImpl instance = null;
-        instance.delete();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of searchByID method, of class StationDAOImpl.
-     */
-    @Test
-    public void testSearchByID() {
-        System.out.println("searchByID");
-        int id = 0;
-        StationDAOImpl instance = null;
-        Station expResult = null;
-        Station result = instance.searchByID(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testAdd() {
+//        System.out.println("add");
+//        StationDAOImpl instance = null;
+//        instance.add();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of edit method, of class StationDAOImpl.
+//     */
+//    @Test
+//    public void testEdit() {
+//        System.out.println("edit");
+//        Object t = null;
+//        StationDAOImpl instance = null;
+//        instance.edit(t);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of delete method, of class StationDAOImpl.
+//     */
+//    @Test
+//    public void testDelete() {
+//        System.out.println("delete");
+//        StationDAOImpl instance = null;
+//        instance.delete();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of searchByID method, of class StationDAOImpl.
+//     */
+//    @Test
+//    public void testSearchByID() {
+//        System.out.println("searchByID");
+//        int id = 0;
+//        StationDAOImpl instance = null;
+//        Station expResult = null;
+//        Station result = instance.searchByID(id);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
     
 }
