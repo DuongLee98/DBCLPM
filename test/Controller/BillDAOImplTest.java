@@ -5,8 +5,13 @@
  */
 package Controller;
 
+import Database.ConnectToDB;
 import Models.Bill;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,7 +55,7 @@ public class BillDAOImplTest {
         ArrayList<Bill> result = instance.getAll();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -62,7 +67,7 @@ public class BillDAOImplTest {
         BillDAOImpl instance = null;
         instance.add();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -74,7 +79,7 @@ public class BillDAOImplTest {
         BillDAOImpl instance = null;
         instance.delete();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -89,7 +94,7 @@ public class BillDAOImplTest {
         Bill result = instance.searchByID(id);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -102,7 +107,7 @@ public class BillDAOImplTest {
         BillDAOImpl instance = null;
         instance.edit(t);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -110,14 +115,29 @@ public class BillDAOImplTest {
      */
     @Test
     public void testAddBill() {
-        System.out.println("addBill");
-        Bill b = null;
-        BillDAOImpl instance = null;
-        boolean expResult = false;
-        boolean result = instance.addBill(b);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Connection conn = null;
+        try {
+            System.out.println("addBill");
+            Bill b = new Bill(6, "14-06-2020", 1, 50, 100, 1, 1, true);
+            ConnectToDB connect = new ConnectToDB();
+            conn = connect.getCon();
+            conn.setAutoCommit(false);
+            BillDAOImpl instance = new BillDAOImpl(conn);
+            
+            boolean expResult = false;
+            
+            boolean result = instance.addBill(b);
+            assertEquals(expResult, result);
+            // TODO review the generated test code and remove the default call to fail.
+            //fail("The test case is a prototype.");
+        } catch (SQLException ex) {
+            try {
+                if (conn != null)
+                    conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(BillDAOImplTest.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(BillDAOImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
 }
