@@ -218,6 +218,40 @@ public class CalculateFncTest {
         //fail("The test case is a prototype.");
     }
     
+    @Test
+    public void testCalculatePrice7(){
+        System.out.println("CalculatePrice");
+        int total = 200;
+        int[] arrLevelInp = {50, 50, 100, 100, 100, -1};
+        int[] arrPriceInp = {-1678, 1734, 2014, 2536, 2834, 2927};
+        
+        ArrayList<Integer> arrLevel = new ArrayList<>();
+        for (int i=0; i<arrLevelInp.length; i++)
+        {
+            arrLevel.add(arrLevelInp[i]);
+        }
+        ArrayList<Integer> arrPrice = new ArrayList<>();
+        for (int i=0; i<arrPriceInp.length; i++)
+        {
+            
+            arrPrice.add(arrPriceInp[i]);
+        }
+        
+        double tax = 10.0;
+        //Double expResult = (double)187660;
+        Double result;
+        try {
+            result = CalculateFnc.CalculatePrice(total, arrLevel, arrPrice, tax);
+            fail( "Should have thrown an exception" );
+        } catch (Exception ex) {
+            String expResult = "Wrong arrPrice<0 in arrPrice index = 0";
+            assertEquals(expResult, ex.getMessage());
+        }
+        //assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+    
     /**
      * Test of stringToListInteger method, of class CalculateFnc.
      */
