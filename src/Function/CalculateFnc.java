@@ -13,18 +13,43 @@ import java.util.ArrayList;
  */
 public class CalculateFnc {
     
-    public static Double CalculatePrice(int total, ArrayList<Integer> arrLevel, ArrayList<Integer> arrPrice, double tax)
+    public static Double CalculatePrice(int total, ArrayList<Integer> arrLevel, ArrayList<Integer> arrPrice, double tax) throws Exception
     {
+        if (total < 0)
+        {
+            throw new Exception("Total < 0");
+        }
+        if (tax < 0)
+        {
+            throw new Exception("Tax < 0");
+        }
         Double rs = 0.0;
         int sd = total;
+        if (arrLevel.size() != 6)
+        {
+            throw new Exception("Wrong size arrayLevel");
+        }
+        if (arrPrice.size() != 6)
+        {
+            throw new Exception("Wrong size arrPrice");
+        }
+        
         for (int i=0; i<arrLevel.size()-1; i++)
         {
             int level = arrLevel.get(i);
+            if (level < 0)
+            {
+                throw new Exception("Wrong level<0 in arrayLevel index = "+i);
+            }
             if (sd < 0)
             {
                 break;
             }
             int tmp = Math.min(sd, level);
+            if (arrPrice.get(i) < 0)
+            {
+                throw new Exception("Wrong arrPrice<0 in arrPrice index = "+i);
+            }
             rs += tmp*arrPrice.get(i);
             sd -= tmp;
         }

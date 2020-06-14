@@ -53,38 +53,42 @@ public class CalculatePrice extends javax.swing.JDialog {
     
     public void setUpView()
     {
-        int st = 0;
-        int en = st + arrLevel.get(0);
-        this.jLabel7.setText("Cho kWh: " + st + " - " + en);
-        st = en;
-        en = st + arrLevel.get(1);
-        this.jLabel9.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        en = st + arrLevel.get(2);
-        this.jLabel11.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        en = st + arrLevel.get(3);
-        this.jLabel13.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        en = st + arrLevel.get(4);
-        this.jLabel15.setText("Cho kWh: " + (st+1) + " - " + en);
-        st = en;
-        //en = st + arrLevel.get(4);
-        this.jLabel17.setText("Cho kWh: " + (st+1) + " - " + "Trở lên");
-        
-        this.jLabel8.setText(arrPrice.get(0) + " đồng/kWh");
-        this.jLabel10.setText(arrPrice.get(1) + " đồng/kWh");
-        this.jLabel12.setText(arrPrice.get(2) + " đồng/kWh");
-        this.jLabel14.setText(arrPrice.get(3) + " đồng/kWh");
-        this.jLabel16.setText(arrPrice.get(4) + " đồng/kWh");
-        this.jLabel18.setText(arrPrice.get(5) + " đồng/kWh");
-        
-        this.jLabel20.setText(this.tax.getValue()+" %");
-        
-        this.jLabel21.setText(this.unit.getDes() + " - " + this.tax.getDes());
-        
-        this.jLabel23.setText(CalculateFnc.CalculatePrice(this.calculate.total, this.arrLevel, this.arrPrice, this.tax.getValue())+"");
-        this.jButton1.setEnabled(this.calculate.canchange);
+        try {
+            int st = 0;
+            int en = st + arrLevel.get(0);
+            this.jLabel7.setText("Cho kWh: " + st + " - " + en);
+            st = en;
+            en = st + arrLevel.get(1);
+            this.jLabel9.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            en = st + arrLevel.get(2);
+            this.jLabel11.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            en = st + arrLevel.get(3);
+            this.jLabel13.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            en = st + arrLevel.get(4);
+            this.jLabel15.setText("Cho kWh: " + (st+1) + " - " + en);
+            st = en;
+            //en = st + arrLevel.get(4);
+            this.jLabel17.setText("Cho kWh: " + (st+1) + " - " + "Trở lên");
+            
+            this.jLabel8.setText(arrPrice.get(0) + " đồng/kWh");
+            this.jLabel10.setText(arrPrice.get(1) + " đồng/kWh");
+            this.jLabel12.setText(arrPrice.get(2) + " đồng/kWh");
+            this.jLabel14.setText(arrPrice.get(3) + " đồng/kWh");
+            this.jLabel16.setText(arrPrice.get(4) + " đồng/kWh");
+            this.jLabel18.setText(arrPrice.get(5) + " đồng/kWh");
+            
+            this.jLabel20.setText(this.tax.getValue()+" %");
+            
+            this.jLabel21.setText(this.unit.getDes() + " - " + this.tax.getDes());
+            
+            this.jLabel23.setText(CalculateFnc.CalculatePrice(this.calculate.total, this.arrLevel, this.arrPrice, this.tax.getValue())+"");
+            this.jButton1.setEnabled(this.calculate.canchange);
+        } catch (Exception ex) {
+            Logger.getLogger(CalculatePrice.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
