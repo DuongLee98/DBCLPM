@@ -122,7 +122,7 @@ public class Payment extends javax.swing.JFrame {
             tien5.setText("0");
         }
         if (thanhtien[5] != 0) {
-            tien6.setText(String.format("%.03f", thanhtien[6]));
+            tien6.setText(String.format("%.03f", thanhtien[5]));
         } else {
             tien6.setText("0");
         }

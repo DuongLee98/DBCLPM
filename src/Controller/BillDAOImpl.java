@@ -146,8 +146,8 @@ public class BillDAOImpl implements DAO {
             String updateSql = "update bill set paymentstatus = true where id = ?";
             PreparedStatement prsm = this.connection.prepareCall(updateSql);
             prsm.setInt(1, bill.getId());
-            prsm.executeUpdate();
-            return 1;
+            int rs = prsm.executeUpdate();
+            return rs;
         } catch (SQLException ex) {
             Logger.getLogger(BillDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
