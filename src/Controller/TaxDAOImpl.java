@@ -50,8 +50,6 @@ public class TaxDAOImpl implements DAO{
     public Tax getAvailableTax(){
         Tax tax = null;
         if (this.connection != null) {
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM tblteacher");
             PreparedStatement prstm = null;
             try {
                 prstm = this.connection.prepareStatement("SELECT * FROM tax where status = 1");

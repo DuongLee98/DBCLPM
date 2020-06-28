@@ -60,30 +60,30 @@ public class AddressDAOImpl  implements DAO{
         return address;
     }
     
-    public Account searchByUsername(String username, String password){
-        Account account = null;
-        String sql="SELECT Id, StaffPersonId, Username, Password FROM account WHERE Username = ? and Password = ?";
-        try{
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, password);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()){
-                account = new Account();
-                StaffDAOImpl staffDAOImpl = new StaffDAOImpl(connection);
-                Staff staff = staffDAOImpl.searchByID(rs.getInt("StaffPersonId"));
-                account.setId(rs.getInt("id"));
-                account.setUsername(rs.getString("username"));
-                account.setPassword(rs.getString("password"));
-                account.setStaffPersonId(staff);
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return account;
-    }
+//    public Account searchByUsername(String username, String password){
+//        Account account = null;
+//        String sql="SELECT Id, StaffPersonId, Username, Password FROM account WHERE Username = ? and Password = ?";
+//        try{
+//            PreparedStatement ps = connection.prepareStatement(sql);
+//            ps.setString(1, username);
+//            ps.setString(2, password);
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()){
+//                account = new Account();
+//                StaffDAOImpl staffDAOImpl = new StaffDAOImpl(connection);
+//                Staff staff = staffDAOImpl.searchByID(rs.getInt("StaffPersonId"));
+//                account.setId(rs.getInt("id"));
+//                account.setUsername(rs.getString("username"));
+//                account.setPassword(rs.getString("password"));
+//                account.setStaffPersonId(staff);
+//            }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        return account;
+//    }
     
-    public int addAddress(Address address){
+    public boolean addAddress(Address address){
         String sql = "INSERT INTO Address(Number, Street) VALUES(?, ?)";
         try{
             PreparedStatement ps = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
@@ -92,12 +92,12 @@ public class AddressDAOImpl  implements DAO{
             ps.executeUpdate();
             ResultSet rs=ps.getGeneratedKeys();
             if (rs.next()){
-                return rs.getInt(1);
+                return true;
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return false;
     }
     
     public Address getLastInsert(){
@@ -118,7 +118,7 @@ public class AddressDAOImpl  implements DAO{
         return address;
     }
     
-    public int updateAddress(Address address){
+    public boolean updateAddress(Address address){
         String sql = "UPDATE Address SET Number = ?, Street = ? WHERE Id = ?";
         try{
             PreparedStatement ps = connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
@@ -127,13 +127,14 @@ public class AddressDAOImpl  implements DAO{
             ps.setInt(3, address.getId());
             ps.executeUpdate();
             ResultSet rs=ps.getGeneratedKeys();
-            if (rs.next()){
-                return rs.getInt(1);
+            System.out.println(rs.next());
+            if (ps.executeUpdate() == 0){
+                return false;
             }
         }catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return true;
     }
     
     public Address getAddress(int id) {
