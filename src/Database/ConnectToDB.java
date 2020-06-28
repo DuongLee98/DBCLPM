@@ -16,7 +16,7 @@ public class ConnectToDB {
     
     public ConnectToDB(){
         if (this.con == null) {
-            String dbUrl = "jdbc:mysql://localhost:3306/dbclpm"+"?useUnicode=true&characterEncoding=UTF-8";
+            String dbUrl = "jdbc:mysql://localhost:3306/dbclpm1"+"?useUnicode=true&characterEncoding=UTF-8";
             String dbClass = "com.mysql.jdbc.Driver";
 
             try {
