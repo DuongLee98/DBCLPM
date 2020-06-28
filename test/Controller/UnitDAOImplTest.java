@@ -5,8 +5,13 @@
  */
 package Controller;
 
+import Database.ConnectToDB;
 import Models.Unit;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -19,99 +24,20 @@ public class UnitDAOImplTest {
     public UnitDAOImplTest() {
     }
 
-    /**
-     * Test of getAll method, of class UnitDAOImpl.
-     */
-    @Test
-    public void testGetAll() {
-        System.out.println("getAll");
-        UnitDAOImpl instance = null;
-        ArrayList expResult = null;
-        ArrayList result = instance.getAll();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of add method, of class UnitDAOImpl.
-     */
-    @Test
-    public void testAdd() {
-        System.out.println("add");
-        UnitDAOImpl instance = null;
-        instance.add();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of edit method, of class UnitDAOImpl.
-     */
-    @Test
-    public void testEdit() {
-        System.out.println("edit");
-        Object t = null;
-        UnitDAOImpl instance = null;
-        instance.edit(t);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of delete method, of class UnitDAOImpl.
-     */
-    @Test
-    public void testDelete() {
-        System.out.println("delete");
-        UnitDAOImpl instance = null;
-        instance.delete();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of searchByID method, of class UnitDAOImpl.
-     */
-    @Test
-    public void testSearchByID() {
-        System.out.println("searchByID");
-        int id = 0;
-        UnitDAOImpl instance = null;
-        Object expResult = null;
-        Object result = instance.searchByID(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getAvailableUnit method, of class UnitDAOImpl.
-     */
+    
     @Test
     public void testGetAvailableUnit() {
         System.out.println("getAvailableUnit");
-        UnitDAOImpl instance = null;
-        Unit expResult = null;
+        ConnectToDB connect = new ConnectToDB();
+        UnitDAOImpl instance = new UnitDAOImpl(connect.getCon());
+        Unit expResult = new Unit(8, "50|50|100|100|105|-", "1678|1734|2014|2536|2834|2927", "Bang gia dien up 31/05/20", 1);
         Unit result = instance.getAvailableUnit();
-        assertEquals(expResult, result);
+        assertEquals(expResult.getId(), result.getId());
+        assertEquals(expResult.getDes(), result.getDes());
+        assertEquals(expResult.getLevel(), result.getLevel());
+        assertEquals(expResult.getPrice(), result.getPrice());
+        assertEquals(expResult.getStatus(), result.getStatus());
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getUnitById method, of class UnitDAOImpl.
-     */
-    @Test
-    public void testGetUnitById() {
-        System.out.println("getUnitById");
-        int id = 0;
-        UnitDAOImpl instance = null;
-        Unit expResult = null;
-        Unit result = instance.getUnitById(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -119,14 +45,26 @@ public class UnitDAOImplTest {
      */
     @Test
     public void testUpdateStatusAllUnit() {
-        System.out.println("UpdateStatusAllUnit");
-        int satus = 0;
-        UnitDAOImpl instance = null;
-        int expResult = 0;
-        int result = instance.UpdateStatusAllUnit(satus);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Connection conn = null;
+        try {
+            System.out.println("UpdateStatusAllUnit");
+            ConnectToDB cdb = new ConnectToDB();
+            conn = cdb.getCon();
+            conn.setAutoCommit(false);
+            int satus = 0;
+            UnitDAOImpl instance = new UnitDAOImpl(conn);
+            int expResult = 0;
+            int result = instance.UpdateStatusAllUnit(satus);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            try {
+                if (conn != null)
+                    conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(BillDAOImplTest.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(TaxDAOImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

@@ -5,8 +5,13 @@
  */
 package Controller;
 
+import Database.ConnectToDB;
 import Models.Tax;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,69 +25,11 @@ public class TaxDAOImplTest {
     }
 
     /**
-     * Test of getAll method, of class TaxDAOImpl.
-     */
-    @Test
-    public void testGetAll() {
-        System.out.println("getAll");
-        TaxDAOImpl instance = null;
-        ArrayList expResult = null;
-        ArrayList result = instance.getAll();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of add method, of class TaxDAOImpl.
-     */
-    @Test
-    public void testAdd() {
-        System.out.println("add");
-        TaxDAOImpl instance = null;
-        instance.add();
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of edit method, of class TaxDAOImpl.
-     */
-    @Test
-    public void testEdit() {
-        System.out.println("edit");
-        Object t = null;
-        TaxDAOImpl instance = null;
-        instance.edit(t);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of delete method, of class TaxDAOImpl.
-     */
-    @Test
-    public void testDelete() {
-        System.out.println("delete");
-        TaxDAOImpl instance = null;
-        instance.delete();
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of searchByID method, of class TaxDAOImpl.
      */
     @Test
     public void testSearchByID() {
-        System.out.println("searchByID");
-        int id = 0;
-        TaxDAOImpl instance = null;
-        Object expResult = null;
-        Object result = instance.searchByID(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+
     }
 
     /**
@@ -91,12 +38,14 @@ public class TaxDAOImplTest {
     @Test
     public void testGetAvailableTax() {
         System.out.println("getAvailableTax");
-        TaxDAOImpl instance = null;
-        Tax expResult = null;
+        ConnectToDB connect = new ConnectToDB();
+        TaxDAOImpl instance = new TaxDAOImpl(connect.getCon());
+        Tax expResult = new Tax(3, 14, "VAT 31/05/20", 1);
         Tax result = instance.getAvailableTax();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        assertEquals(expResult.getId(), result.getId());
+        assertEquals(expResult.getDes(), result.getDes());
+        assertEquals(expResult.getValue(), result.getValue(), 0.0001);
+        assertEquals(expResult.isStatus(), result.isStatus());
     }
 
     /**
@@ -106,10 +55,14 @@ public class TaxDAOImplTest {
     public void testGetTaxById() {
         System.out.println("getTaxById");
         int id = 0;
-        TaxDAOImpl instance = null;
-        Tax expResult = null;
-        Tax result = instance.getTaxById(id);
-        assertEquals(expResult, result);
+        ConnectToDB connect = new ConnectToDB();
+        TaxDAOImpl instance = new TaxDAOImpl(connect.getCon());
+        Tax expResult = new Tax(3, 14, "VAT 31/05/20", 1);
+        Tax result = instance.getTaxById(3);
+        assertEquals(expResult.getId(), result.getId());
+        assertEquals(expResult.getDes(), result.getDes());
+        assertEquals(expResult.getValue(), result.getValue(), 0.0001);
+        assertEquals(expResult.isStatus(), result.isStatus());
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
@@ -119,14 +72,26 @@ public class TaxDAOImplTest {
      */
     @Test
     public void testUpdateStatusAllTax() {
-        System.out.println("UpdateStatusAllTax");
-        int satus = 0;
-        TaxDAOImpl instance = null;
-        int expResult = 0;
-        int result = instance.UpdateStatusAllTax(satus);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        Connection conn = null;
+        try {
+            System.out.println("UpdateStatusAllTax");
+            int satus = 0;
+            ConnectToDB cdb = new ConnectToDB();
+            conn = cdb.getCon();
+            conn.setAutoCommit(false);
+            TaxDAOImpl instance = new TaxDAOImpl(conn);
+            int expResult = 0;
+            int result = instance.UpdateStatusAllTax(satus);
+            assertEquals(expResult, result);
+        } catch (SQLException ex) {
+            try {
+                if (conn != null)
+                    conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(BillDAOImplTest.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(TaxDAOImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -134,14 +99,27 @@ public class TaxDAOImplTest {
      */
     @Test
     public void testUpdateTax() {
-        System.out.println("UpdateTax");
-        Tax t = null;
-        TaxDAOImpl instance = null;
-        int expResult = 0;
-        int result = instance.UpdateTax(t);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
+        Connection conn = null;
+        try {
+            System.out.println("UpdateTax");
+            ConnectToDB cdb = new ConnectToDB();
+            conn = cdb.getCon();
+            conn.setAutoCommit(false);
+            Tax t = new Tax(0, 12, "VAT 13/5", 1);
+            TaxDAOImpl instance = new TaxDAOImpl(conn);
+            int expResult = 0;
+            int result = instance.UpdateTax(t);
+            assertEquals(expResult, result);
+            
+        } catch (SQLException ex) {
+            try {
+                if (conn != null)
+                    conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(BillDAOImplTest.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(TaxDAOImplTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
